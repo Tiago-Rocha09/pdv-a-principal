@@ -1,0 +1,12 @@
+@import "../../../../styles/variables.module.scss";
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: $blue;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  padding: 1rem;
+}

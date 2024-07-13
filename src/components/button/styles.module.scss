@@ -1,0 +1,12 @@
+button.button {
+  margin-top: 24px;
+  max-width: 400px;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  @media (max-width: 420px) {
+    max-width: 100%;
+  }
+}

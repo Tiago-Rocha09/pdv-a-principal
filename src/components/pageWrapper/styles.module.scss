@@ -1,0 +1,35 @@
+@import "../../styles/variables.module.scss";
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 6rem;
+
+  .subContainer {
+    width: 100%;
+    background: $white;
+    padding: 2rem;
+    gap: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 0.5rem;
+    --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+      0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color),
+      0 4px 6px -4px var(--tw-shadow-color);
+    box-shadow: 0 0 #0000, 0 0 #0000, var(--tw-shadow);
+    @media (max-width: 768px) {
+      padding: 0.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.25rem;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}

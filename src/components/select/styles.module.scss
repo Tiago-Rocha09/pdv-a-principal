@@ -1,0 +1,22 @@
+@import "../../styles/variables.module.scss";
+
+.containerInput {
+  border: none;
+  p {
+    color: $error;
+    font-weight: 400;
+    font-size: 0.75rem;
+    line-height: 1.66;
+    letter-spacing: 0.03333em;
+    text-align: left;
+    margin-top: 3px;
+    margin-right: 14px;
+    margin-bottom: 0;
+    margin-left: 14px;
+  }
+
+  .borderError {
+    border-color: $error;
+    color: $error;
+  }
+}
