@@ -2,6 +2,12 @@
 
 .containerInput {
   border: none;
+
+  .label{
+    color: $blue;
+    font-weight: bold;
+  }
+
   p {
     color: $error;
     font-weight: 400;

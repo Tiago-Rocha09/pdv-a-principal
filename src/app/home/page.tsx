@@ -15,7 +15,7 @@ import colors from '@/styles/variables.module.scss'
 
 export default function Home() {
     const router = useRouter()
-    const { user } = useAuth()
+    const { user, logout } = useAuth()
     console.log(user);
 
     return (
@@ -24,14 +24,14 @@ export default function Home() {
                 <Image src={logo} alt="Logo A Principal" width={400} className={styles.logo} />
             </hgroup>
             <div className={styles.container}>
-                <ActionCard title="Vendas" icon={<FaRegMoneyBillAlt color="white" size={64} />} action={() => router.push('/vendas')} />
-                <ActionCard title="Produtos" icon={<FaGift color="white" size={64} />} action={() => router.push('/produtos')} />
-                <ActionCard title="Clientes" icon={<FaUser color="white" size={64} />} action={() => router.push('/clientes')} />
-                <ActionCard title="Metas" icon={<GiNetworkBars color="white" size={64} />} action={() => { }} />
-                <ActionCard title="CRM" icon={<FaAddressBook color="white" size={64} />} action={() => { }} />
-                <ActionCard title="Configurações" icon={<TbSettingsCog color="white" size={64} />} action={() => { }} />
+                <ActionCard title="Vendas" icon={<FaRegMoneyBillAlt color="white" size={64} />} href="/vendas" />
+                <ActionCard title="Produtos" icon={<FaGift color="white" size={64} />} href="/produtos" />
+                <ActionCard title="Clientes" icon={<FaUser color="white" size={64} />} href="/clientes" />
+                <ActionCard title="Metas" icon={<GiNetworkBars color="white" size={64} />} href="" />
+                <ActionCard title="CRM" icon={<FaAddressBook color="white" size={64} />} href="" />
+                <ActionCard title="Configurações" icon={<TbSettingsCog color="white" size={64} />} href="" />
             </div>
-            <CustomButton text="Sair" onClick={() => router.push('/login')} bgColor={colors.blueColor} width="24rem" />
+            <CustomButton text="Sair" onClick={() => logout()} bgColor={colors.blueColor} width="24rem" />
         </PageWrapper>
     );
 }

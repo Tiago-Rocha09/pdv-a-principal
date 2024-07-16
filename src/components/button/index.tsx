@@ -1,7 +1,6 @@
-import { Button, ButtonProps } from "@mui/material"
+import { Button, ButtonProps, CircularProgress } from "@mui/material"
 import colors from '@/styles/variables.module.scss'
 import styles from './styles.module.scss'
-import { ClipLoader } from "react-spinners"
 
 type CustomButtonProps = {
     text: string,
@@ -14,14 +13,16 @@ export const CustomButton = ({
     text,
     bgColor = colors.pinkStrongColor,
     variant = 'contained',
-    width = "fit-content",
+    width = "400px",
     isLoading = false,
+    className = "",
     ...rest
 }: CustomButtonProps) => {
     return <Button
         {...rest}
         variant={variant}
-        className={styles.button}
+        className={`${styles.button} ${className}`}
+        disabled={isLoading}
         sx={{
             width,
             backgroundColor: bgColor,
@@ -31,6 +32,6 @@ export const CustomButton = ({
             }
         }}>
         {text}
-        {isLoading && <ClipLoader size={20}/>}
+        {isLoading && <CircularProgress size={20} />}
     </Button>
 }

@@ -1,0 +1,19 @@
+@import "../../styles/variables.module.scss";
+
+.container {
+  position: absolute;
+  bottom: 1rem;
+  display: flex;
+  flex-direction: row;
+  left: 50%;
+  transform: translateX(-50%);
+  justify-content: center;
+  gap: 1rem;
+  padding-inline: 0.25rem;
+  button{
+    border-radius: 0;
+  }
+
+  @media (max-width: 768px) {
+  }
+}

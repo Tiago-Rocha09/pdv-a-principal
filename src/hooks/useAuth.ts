@@ -5,14 +5,19 @@ import { OptionSelect } from "@/types/select";
 import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { STORAGE_KEY_ACCESS_TOKEN, STORAGE_KEY_USER } from "@/constants";
+import {
+  COOKIE_KEY_ACCESS_TOKEN,
+  STORAGE_KEY_ACCESS_TOKEN,
+  STORAGE_KEY_USER,
+} from "@/constants";
+import { deleteCookie, setCookie } from "@/actions/cookie";
 
 export const useAuth = () => {
   const router = useRouter();
-  const user = useStore((state) => state.user);
-  const accessToken = useStore((state) => state.accessToken);
-  const setUser = useStore((state) => state.setUser);
-  const setAccessToken = useStore((state) => state.setAccessToken);
+  const user = useStore((state) => state.login.user);
+  const accessToken = useStore((state) => state.login.accessToken);
+  const setUser = useStore((state) => state.login.setUser);
+  const setAccessToken = useStore((state) => state.login.setAccessToken);
   console.log(user);
   console.log(accessToken);
 
@@ -72,13 +77,13 @@ export const useAuth = () => {
     }
   };
 
-  const login = async (data: LoginSchema) => {
+  const login = async (formData: LoginSchema) => {
     try {
       setIsLoading(true);
       const response = await authService.login({
-        username: data.user,
-        password: data.password,
-        base: data.base,
+        username: formData.user,
+        password: formData.password,
+        base: formData.base,
       });
       console.log(response);
 
@@ -88,6 +93,7 @@ export const useAuth = () => {
         const userData = {
           id: data.id,
           name: data.user,
+          storeId: formData.store,
         };
         window.localStorage.setItem(
           STORAGE_KEY_ACCESS_TOKEN,
@@ -96,6 +102,7 @@ export const useAuth = () => {
         window.localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(userData));
         setAccessToken(data.access_token);
         setUser(userData);
+        setCookie(COOKIE_KEY_ACCESS_TOKEN, data.access_token);
         toast.success("Bem vindo!");
         return router.push("/home");
       }
@@ -109,5 +116,23 @@ export const useAuth = () => {
     }
   };
 
-  return { getBasesAvailable, bases, isLoading, login, getBaseStores, stores, user };
+  const logout = async () => {
+    window.localStorage.removeItem(STORAGE_KEY_ACCESS_TOKEN);
+    window.localStorage.removeItem(STORAGE_KEY_USER);
+    setAccessToken(null);
+    setUser({ id: null, name: null, storeId: null });
+    deleteCookie(COOKIE_KEY_ACCESS_TOKEN);
+    router.push("/login");
+  };
+
+  return {
+    getBasesAvailable,
+    bases,
+    isLoading,
+    login,
+    getBaseStores,
+    stores,
+    user,
+    logout,
+  };
 };

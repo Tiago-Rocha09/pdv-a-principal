@@ -1,0 +1,18 @@
+@import "../../../../../styles/variables.module.scss";
+
+.container {
+  width: 100%;
+  margin: 2rem auto;
+
+  .outlined{
+    background-color: transparent;
+    // border: $pink;
+    // color: $blue;
+    border: 1px solid $pink-strong;
+    color: $pink-strong;
+  }
+  .button {
+    margin: auto;
+    margin-top: 1rem;
+  }
+}
