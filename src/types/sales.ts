@@ -10,3 +10,7 @@ export class SaleTypeResponse {
   "tabelasPreco": OptionSelectApi[];
   "locaisEstoque": OptionSelectApi[];
 }
+
+export type SaleConfigurationResponse = {
+  codTipoVendaDesafio: number;
+};

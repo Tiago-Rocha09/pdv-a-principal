@@ -1,19 +1,23 @@
 @import "../../styles/variables.module.scss";
 
 .container {
-  position: absolute;
-  bottom: 1rem;
+  position: fixed;
+  height: $fixedFooterHeigth;
+  bottom: 1.25rem;
   display: flex;
   flex-direction: row;
   left: 50%;
   transform: translateX(-50%);
   justify-content: center;
   gap: 1rem;
-  padding-inline: 0.25rem;
-  button{
+  padding-inline: 2rem;
+  z-index: 5;
+  button {
     border-radius: 0;
   }
 
   @media (max-width: 768px) {
+    gap: 0.25rem;
+    padding-inline: 0.25rem;
   }
 }

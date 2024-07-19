@@ -4,15 +4,31 @@
   width: 100%;
   margin: 2rem auto;
 
-  .outlined{
-    background-color: transparent;
-    // border: $pink;
-    // color: $blue;
-    border: 1px solid $pink-strong;
-    color: $pink-strong;
+  .resumeContainer {
+    position: fixed;
+    bottom: calc($fixedFooterHeigth + 8px + 1.25rem);
+    left: 0;
+    padding-inline: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
   }
-  .button {
-    margin: auto;
-    margin-top: 1rem;
+  .actionsContainer {
+    .outlined {
+      background-color: transparent;
+      border: 1px solid $pink-strong;
+      color: $pink-strong;
+
+      @media (max-width: 768px) {
+        gap: 0;
+        span {
+          margin-left: 0;
+          margin-right: 0;
+
+          svg {
+            font-size: 14px;
+          }
+        }
+      }
+    }
   }
 }

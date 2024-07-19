@@ -28,7 +28,7 @@ const getItemInfo = (item: Customer) => {
 export const SelectSaleType = () => {
 
     const { selectedCustomer } = useCustomer()
-    const { saleTypes, listSaleTypes, handlePreviousStep, handleSelectSaleType } = useSale()
+    const { saleTypes, listSaleTypes, handlePreviousStep, handleSelectSaleType, getConfiguration } = useSale()
     const { control, handleSubmit } = useForm<SelectSaleTypeSchema>({
         resolver: zodResolver(selectSaleTypeSchema)
     })
@@ -40,7 +40,8 @@ export const SelectSaleType = () => {
 
     useEffect(() => {
         listSaleTypes()
-    }, [listSaleTypes])
+        getConfiguration()
+    }, [listSaleTypes, getConfiguration])
 
     return (
         <Stack className={styles.container}>

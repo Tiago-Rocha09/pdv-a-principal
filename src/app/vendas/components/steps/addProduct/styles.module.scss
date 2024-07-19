@@ -1,0 +1,28 @@
+@import "../../../../../styles/variables.module.scss";
+
+.container {
+  width: 100%;
+  margin: 2rem auto;
+
+  .outlined {
+    background-color: $white !important;
+    border: 1px solid $pink-strong !important;
+    color: $pink-strong !important;
+
+    @media (max-width: 768px) {
+      gap: 0.25rem;
+      span {
+        margin-left: 0;
+        margin-right: 0;
+
+        svg {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .formContainer {
+    margin-bottom: 2rem;
+  }
+}

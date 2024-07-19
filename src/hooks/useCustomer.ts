@@ -13,6 +13,7 @@ export const useCustomer = () => {
   const listCustomers = async (searchTerm: string) => {
     try {
       setIsLoading(true);
+
       const response = await customerService.getCustomers(searchTerm, storeId);
       setIsLoading(false);
       setCustomers(response.data);
@@ -34,7 +35,6 @@ export const useCustomer = () => {
       return `${customers.length} clientes encontrados`;
     }
   };
-
 
   return {
     listCustomers,

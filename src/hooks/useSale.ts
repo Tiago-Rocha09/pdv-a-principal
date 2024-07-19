@@ -1,38 +1,67 @@
 import { salesService } from "@/services/sales";
 import { useStore } from "@/store";
 import { Customer } from "@/types/customer";
-import { SaleTypeResponse } from "@/types/sales";
+import { SaleConfigurationResponse, SaleTypeResponse } from "@/types/sales";
 import { OptionSelect, OptionSelectApi } from "@/types/select";
 import { useCallback, useState } from "react";
 
-const steps = [0, 0.5, 1];
+const steps = [
+  0, //Buscar/selecionar cliente
+  0.5, //Selecionar tipo de venda
+  1, //Carrinho com lista de produtos
+  1.1, //Buscar/selecionar/ver detalhes do produto
+  1.2, //Definir desconto/quantidade do produto e adicionar no carrinho
+];
+
+type SalesTypeOptionSelect = {
+  tabPrice: 1;
+  local: 1;
+} & OptionSelect;
 
 export const useSale = () => {
   const storeId = useStore((state) => state.login.user?.storeId) as number;
-  const activeStep = useStore((state) => state.sales.activeStep);
-  const isLoading = useStore((state) => state.sales.isLoading);
-  const setIsLoading = useStore((state) => state.sales.setIsLoading);
-  const setActiveStep = useStore((state) => state.sales.setActiveStep);
-  const setSelectedSaleType = useStore(
-    (state) => state.sales.setSelectedSaleType
-  );
+  const [activeStep, setActiveStep] = useStore((state) => [
+    state.sales.activeStep,
+    state.sales.setActiveStep,
+  ]);
+  const [isLoading, setIsLoading] = useStore((state) => [
+    state.sales.isLoading,
+    state.sales.setIsLoading,
+  ]);
+  const [cartItems, setCartItems] = useStore((state) => [
+    state.sales.cartItems,
+    state.sales.setCartItems,
+  ]);
+  const [selectedSaleType, setSelectedSaleType] = useStore((state) => [
+    state.sales.selectedSaleType,
+    state.sales.setSelectedSaleType,
+  ]);
+  const [configuration, setConfiguration] = useStore((state) => [
+    state.sales.configuration,
+    state.sales.setConfiguration,
+  ]);
+  const [selectedTabPrice, setSelectedTabPrice] = useStore((state) => [
+    state.sales.selectedTabPrice,
+    state.sales.setSelectedTabPrice,
+  ]);
   const setSelectedCustomer = useStore(
     (state) => state.sales.setSelectedCustomer
   );
 
-  const [saleTypes, setSaleTypes] = useState<OptionSelect[]>([]);
+  const [saleTypes, setSaleTypes] = useState<SalesTypeOptionSelect[]>([]);
 
   const handleSelectCustomer = (selectedCustomer: Customer) => {
-    console.log({ selectedCustomer });
-
     setSelectedCustomer(selectedCustomer);
     handleNextStep();
   };
 
   const handleSelectSaleType = (selectedSaleType: number) => {
-    console.log({ selectedSaleType });
-
     setSelectedSaleType(selectedSaleType);
+    const tabPrice =
+      saleTypes.find((item) => item.value === selectedSaleType)?.tabPrice ||
+      null;
+
+    setSelectedTabPrice(tabPrice);
     handleNextStep();
   };
 
@@ -43,9 +72,11 @@ export const useSale = () => {
       if (response.status === 200) {
         const data: SaleTypeResponse = response.data;
         setSaleTypes(
-          data.tiposVenda.map((item: OptionSelectApi) => ({
+          data.tiposVenda.map((item: any) => ({
             value: item.id,
             label: item.name,
+            tabPrice: item.codTabelaPadrao,
+            local: item.localEstoquePadrao,
           }))
         );
       } else {
@@ -55,7 +86,23 @@ export const useSale = () => {
     } catch (error) {
       setSaleTypes([]);
     }
-  }, [setIsLoading, storeId]);
+  }, [storeId]);
+
+  const getConfiguration = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await salesService.getConfiguration(storeId);
+      if (response.status === 200) {
+        const data: SaleConfigurationResponse = response.data;
+        setConfiguration(data);
+      } else {
+        setConfiguration(null);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setConfiguration(null);
+    }
+  }, [storeId]);
 
   const handleNextStep = () => {
     const currentStepIndex = steps.findIndex((item) => item === activeStep);
@@ -73,9 +120,14 @@ export const useSale = () => {
     activeStep,
     saleTypes,
     isLoading,
+    selectedTabPrice,
+    configuration,
+    selectedSaleType,
     listSaleTypes,
     handleSelectCustomer,
     handlePreviousStep,
-    handleSelectSaleType
+    handleSelectSaleType,
+    handleNextStep,
+    getConfiguration,
   };
 };

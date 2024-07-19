@@ -6,6 +6,6 @@ type ListActionProps = {
     text: string
 } & ButtonProps
 
-export const ListAction = ({ text, ...rest }: ListActionProps) => {
-    return <CustomButton text={text} width="10rem" className={styles.button}  {...rest} />
+export const ListAction = ({ text, className = '', ...rest }: ListActionProps) => {
+    return <CustomButton text={text} width="10rem" className={`${styles.button} ${className}`}  {...rest} />
 }

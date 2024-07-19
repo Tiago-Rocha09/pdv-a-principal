@@ -7,6 +7,9 @@ $pink: #f91d8152;
 $pink-strong: #f91d81;
 $error: #d32f2f;
 $blue: #069;
+$brown: #800;
+
+$fixedFooterHeigth: 40px;
 
 :export {
   whiteColor: $white;
@@ -18,4 +21,6 @@ $blue: #069;
   pinkStrongColor: $pink-strong;
   errorColor: $error;
   blueColor: $blue;
+  brownColor: $brown;
+  
 }

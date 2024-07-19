@@ -7,11 +7,20 @@
   width: 100%;
   padding-left: 0;
   padding-right: 0;
-  border-bottom: solid 1px $blue;
-  margin-bottom: 1rem;
   .textKey {
     color: $blue;
     font-weight: bold;
+  }
+  
+  &.showLines{
+    border-bottom: solid 1px $blue;
+  }
+
+  &.vertical {
+    display: block;
+    @media (max-width: 768px) {
+      margin-bottom: 0;
+    }
   }
   p {
     margin: 0;

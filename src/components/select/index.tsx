@@ -2,7 +2,7 @@ import { OptionSelect } from "@/types/select"
 import { Controller, FieldValues, useController, UseControllerProps } from "react-hook-form"
 import ReactSelect from "react-select"
 import styles from './styles.module.scss'
-import { FormLabel } from "@mui/material"
+import { Label } from "../label"
 
 type InputProps<T extends FieldValues> = {
     label: string,
@@ -23,7 +23,7 @@ export const Select = <T extends FieldValues>({ control, name, label, options, p
         {...rest}
         render={({ field: fieldSelect }) => (
             <fieldset className={styles.containerInput}>
-                {label && <FormLabel className={styles.label}>{label}</FormLabel>}
+                {label && <Label text={label} />}
                 <ReactSelect
                     {...fieldSelect}
                     value={options.find(item => item.value === fieldSelect.value)}

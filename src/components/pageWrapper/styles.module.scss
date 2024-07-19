@@ -6,9 +6,10 @@
   flex-direction: column;
   align-items: center;
   gap: 2rem;
-  padding: 1rem;
+  padding: 1rem 0;
 
   .subContainer {
+    position: relative;
     width: 100%;
     background: $white;
     padding: 1rem;

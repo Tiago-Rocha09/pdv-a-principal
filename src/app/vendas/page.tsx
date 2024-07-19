@@ -4,9 +4,12 @@ import { Box, Step, StepLabel, Stepper } from '@mui/material';
 import styles from './styles.module.scss'
 import { PageWrapper } from "@/components/pageWrapper";
 import { useSale } from '../../hooks/useSale';
-import { SearchCustomer } from './components/steps/customerSearch';
 import { SelectSaleType } from './components/steps/selectSaleType';
 import { Cart } from './components/steps/cart';
+import { SearchCustomerStep } from './components/steps/customerSearchStep';
+import { ProductSearchStep } from './components/steps/productSearchStep';
+import { AddProduct } from './components/steps/addProduct';
+import { ToastContainer } from 'react-toastify';
 
 const stepLabels = [
     'Dados',
@@ -16,15 +19,24 @@ const stepLabels = [
 ];
 
 const getStepComponent = (activeStep: number) => {
+
     switch (activeStep) {
         case 0:
-            return <SearchCustomer />
+            return <SearchCustomerStep />
             break;
         case 0.5:
-            return <SelectSaleType />
+            return <SelectSaleType key={activeStep.toString()} />
             break;
         case 1:
             return <Cart />
+            break;
+
+        case 1.1:
+            return <ProductSearchStep />
+            break;
+
+        case 1.2:
+            return <AddProduct />
             break;
 
         default:
@@ -39,6 +51,8 @@ export default function Sales() {
 
     return (
         <PageWrapper>
+
+            <ToastContainer />
             <Box className={styles.container}>
                 <Stepper activeStep={Math.floor(activeStep)} alternativeLabel>
                     {stepLabels.map((label) => (

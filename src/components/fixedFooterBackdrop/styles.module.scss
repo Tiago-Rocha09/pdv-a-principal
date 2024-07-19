@@ -1,0 +1,11 @@
+@import "../../styles/variables.module.scss";
+
+.container {
+  height: calc(40px + 2.25rem);
+  position: fixed;
+  bottom: 0;
+  background: #fff;
+  padding: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}

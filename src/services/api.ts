@@ -16,13 +16,9 @@ api.interceptors.request.use(
     try {
       const token = await getToken();
       if (token) {
-        console.log("Token found:", token);
         config.headers.Authorization = `Bearer ${token}`;
-      } else {
-        console.log("No token found");
       }
       config.headers["Current-Path"] = window.location.pathname;
-      console.log("Config headers:", config.headers);
       return config;
     } catch (error) {
       console.error("Interceptor error", error);

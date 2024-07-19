@@ -18,4 +18,21 @@ export const salesService = {
       }));
     return result;
   },
+  getConfiguration: async (codLoja: number) => {
+    const result = await api
+      .get("/pdv/sales/configuration", {
+        params: {
+          codLoja,
+        },
+      })
+      .then(({ data, status }) => ({
+        status,
+        data,
+      }))
+      .catch(({ response }) => ({
+        status: response.status,
+        data: response.data,
+      }));
+    return result;
+  },
 };

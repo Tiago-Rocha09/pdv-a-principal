@@ -4,10 +4,11 @@ import styles from './styles.module.scss'
 
 type CustomInputProps<T extends FieldValues> = {
     label: string
+    hideValidation?: boolean
 } & UseControllerProps<T>
     & TextFieldProps
 
-export const CustomInput = <T extends FieldValues>({ control, name, label, ...rest }: CustomInputProps<T>) => {
+export const CustomInput = <T extends FieldValues>({ control, name, label, hideValidation = false, ...rest }: CustomInputProps<T>) => {
     const { field, fieldState: { invalid, error } } = useController<T>({
         control,
         name
@@ -25,8 +26,8 @@ export const CustomInput = <T extends FieldValues>({ control, name, label, ...re
                     label={label}
                     aria-describedby={`helper-${name}`}
                     aria-invalid={invalid ? 'true' : 'false'}
-                    helperText={error?.message}
-                    error={invalid}
+                    helperText={!hideValidation ? error?.message : null}
+                    error={invalid && !hideValidation}
                 />
             </FormControl>
         )}

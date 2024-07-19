@@ -1,3 +1,4 @@
+import { JSX } from 'react'
 import { CustomInput } from "@/components/input"
 import { useForm } from "react-hook-form"
 import colors from '@/styles/variables.module.scss'
@@ -9,9 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useCustomer } from "@/hooks/useCustomer"
 import { Chip } from "@mui/material"
 import List from "@/components/list"
-import { FaCheck } from "react-icons/fa"
 import { Customer } from "@/types/customer"
-import { useSale } from "@/hooks/useSale"
 
 const getItemInfo = (item: Customer) => {
     return {
@@ -23,11 +22,14 @@ const getItemInfo = (item: Customer) => {
     }
 }
 
-export const SearchCustomer = () => {
+type SearchCustormerProps = {
+    listActions: (item: Customer) => JSX.Element
+}
+
+export const SearchCustomer = ({ listActions }: SearchCustormerProps) => {
 
     const { listCustomers, customers, totalCustomers, isLoading } = useCustomer()
-    const { handleSelectCustomer } = useSale()
-    const { control, handleSubmit, formState: { errors } } = useForm<CustomerSearchSchema>({
+    const { control, handleSubmit} = useForm<CustomerSearchSchema>({
         resolver: zodResolver(customerSearchSchema)
     })
 
@@ -47,10 +49,8 @@ export const SearchCustomer = () => {
                 {
                     customers.map((item) => {
                         const itemInfo = getItemInfo(item)
-                        return <List.Item info={{ ...itemInfo }} key={item.codCliente.toString()}>
-                            <List.Actions>
-                                <List.Action text='Selecionar' endIcon={<FaCheck />} type="button" onClick={() => handleSelectCustomer(item)} />
-                            </List.Actions>
+                        return <List.Item info={{ ...itemInfo }} key={item.codCliente.toString()} raised>
+                            {listActions(item)}
                         </List.Item>
                     })
                 }

@@ -1,17 +1,18 @@
 import { Stack, Typography } from "@mui/material"
 import styles from './styles.module.scss'
+import { Label } from "../label"
 
-type SimpleInfoProps = {
+export type SimpleInfoProps = {
     label: string
-    value: string
+    value: string | number | null
+    vertical?: boolean
+    showLines?: boolean
 }
 
-export const SimpleInfo = ({ label, value }: SimpleInfoProps) => {
-    return <Stack key={`${label}_${value}`} className={styles.container}>
-        <Typography className={styles.textKey} gutterBottom>
-            {label}
-        </Typography>
-        {value && <Typography className={styles.textValue} gutterBottom>
+export const SimpleInfo = ({ label, value, vertical = false, showLines = false }: SimpleInfoProps) => {
+    return <Stack key={`${label}_${value}`} className={`${styles.container} ${vertical ? styles.vertical : ''} ${showLines ? styles.showLines : ''}`}>
+        <Label text={label} />
+        {value && <Typography sx={{ fontSize: '0.9rem' }} className={styles.textValue} gutterBottom>
             {value}
         </Typography>}
     </Stack>
