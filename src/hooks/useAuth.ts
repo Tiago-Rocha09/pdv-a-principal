@@ -18,8 +18,6 @@ export const useAuth = () => {
   const accessToken = useStore((state) => state.login.accessToken);
   const setUser = useStore((state) => state.login.setUser);
   const setAccessToken = useStore((state) => state.login.setAccessToken);
-  console.log(user);
-  console.log(accessToken);
 
   const [bases, setBases] = useState<OptionSelect[]>([]);
   const [stores, setStores] = useState<OptionSelect[]>([]);
@@ -29,7 +27,6 @@ export const useAuth = () => {
     try {
       setIsLoading(true);
       const response = await authService.getBases();
-      console.log(response);
 
       setIsLoading(false);
       if (response.status === 200 && Array.isArray(response.data)) {
@@ -37,9 +34,6 @@ export const useAuth = () => {
           response.data.map((item) => ({ value: item.id, label: item.name }))
         );
       }
-      console.log(
-        response.data.message || "Não foi possível carregar as bases"
-      );
 
       toast.error(
         response.data.message || "Não foi possível carregar as bases"
@@ -55,7 +49,6 @@ export const useAuth = () => {
     try {
       setIsLoading(true);
       const response = await authService.getBaseStores(base);
-      console.log(response);
 
       setIsLoading(false);
       if (response.status === 200 && Array.isArray(response.data)) {
@@ -63,9 +56,6 @@ export const useAuth = () => {
           response.data.map((item) => ({ value: item.id, label: item.name }))
         );
       }
-      console.log(
-        response.data.message || "Não foi possível carregar as lojas"
-      );
 
       toast.error(
         response.data.message || "Não foi possível carregar as lojas"
@@ -85,7 +75,6 @@ export const useAuth = () => {
         password: formData.password,
         base: formData.base,
       });
-      console.log(response);
 
       setIsLoading(false);
       if (response.status === 201) {
@@ -106,7 +95,6 @@ export const useAuth = () => {
         toast.success("Bem vindo!");
         return router.push("/home");
       }
-      console.log(response.data.message || "Não foi possível concluir o login");
 
       toast.error(response.data.message || "Não foi possível concluir o login");
       setStores([]);

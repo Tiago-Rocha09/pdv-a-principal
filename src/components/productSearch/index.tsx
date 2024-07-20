@@ -34,11 +34,9 @@ export const ProductSearch = ({ listActions, extraFields }: ProductSearchProps) 
     })
 
     const onSubmit = (data: CustomerSearchSchema) => {
-        console.log(data);
         listProducts(data.searchTerm)
     }
-
-    console.log(products);
+    console.log({ products });
 
     return (
         <>

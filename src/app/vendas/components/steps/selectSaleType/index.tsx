@@ -34,7 +34,6 @@ export const SelectSaleType = () => {
     })
 
     const onSubmit = (data: SelectSaleTypeSchema) => {
-        console.log(data);
         handleSelectSaleType(data.saleType)
     }
 

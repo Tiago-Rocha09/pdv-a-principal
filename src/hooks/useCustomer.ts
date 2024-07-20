@@ -17,7 +17,6 @@ export const useCustomer = () => {
       const response = await customerService.getCustomers(searchTerm, storeId);
       setIsLoading(false);
       setCustomers(response.data);
-      console.log(response);
     } catch (error) {
       console.log({ error });
       setIsLoading(false);

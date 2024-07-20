@@ -11,7 +11,7 @@ type CustomInputProps<T extends FieldValues> = {
     max?: number
     min?: number
     maskType?: string
-    customOnChange?: (value?: string, field?: string) => void
+    customOnChange?: (value?: number, field?: string) => void
 } & UseControllerProps<T>
     & TextFieldProps
 
@@ -27,19 +27,30 @@ const parseCurrencyValue = (value: string): string => {
     return value.replace(/[^0-9]/g, '');
 }
 
-export const NumberFormatInput = <T extends FieldValues>({ control, name, label, hideValidation = false, inputStyle = "currency", max, min, maskType, customOnChange = () => { }, ...rest }: CustomInputProps<T>) => {
+export const NumberFormatInput = <T extends FieldValues>({
+    control,
+    name,
+    label,
+    hideValidation = false,
+    inputStyle = "currency",
+    max,
+    min,
+    maskType,
+    customOnChange = () => { },
+    ...rest
+}: CustomInputProps<T>) => {
     const { field, fieldState: { invalid, error } } = useController<T>({
         control,
         name
     })
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const rawValue = parseCurrencyValue(event.target.value);
-        if (max && Number(rawValue) > max) {
+        const rawValue = Number(parseCurrencyValue(event.target.value));
+        if (max && rawValue > max) {
             toast.error(`O valor máximo permitido é ${max}`)
             return
         }
-        if (min && (Number(rawValue) / 100) < min) {
+        if (min && (rawValue / 100) < min) {
             toast.error(`O valor mínimo permitido é ${min}`)
             return
         }

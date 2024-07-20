@@ -1,69 +1,67 @@
-import { CustomInput } from "@/components/input"
 import { useForm } from "react-hook-form"
 import colors from '@/styles/variables.module.scss'
 import { CustomButton } from "@/components/button"
 
 import styles from './styles.module.scss'
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useCustomer } from "@/hooks/useCustomer"
-import { Chip, Container, Grid, Stack, Typography } from "@mui/material"
+import { Stack } from "@mui/material"
 import List from "@/components/list"
-import { FaArrowLeft, FaArrowRight, FaCheck, FaPlusCircle } from "react-icons/fa"
-import { Customer } from "@/types/customer"
-import { SimpleInfo } from "@/components/simpleInfo"
-import { Select } from "@/components/select"
+import { FaArrowLeft, FaArrowRight, FaPlusCircle } from "react-icons/fa"
 import { selectSaleTypeSchema, SelectSaleTypeSchema } from "./selectSaleType.schema"
 import { useSale } from "@/hooks/useSale"
-import { useEffect } from "react"
 import { FixedFooterActions } from "@/components/fixedFooterActions"
 import { useCart } from "@/hooks/useCart"
+import { CartProduct } from "@/types/product"
+import { FixedFooterBackdrop } from "@/components/fixedFooterBackdrop"
+import { listActions } from "./components/listActions"
+import { extraFields } from "./components/extraFields"
+import { CartQtdLabel } from "./components/cartQtdLabel"
+import { CartResume } from "./components/cartResume"
 
-const CartEmpty = () => {
-    return <Chip label="Nenhum item no carrinho" />
+const getItemInfo = (item: CartProduct) => {
+    return {
+        '': `${item?.codProd} - ${item?.descricao}`,
+    }
 }
 
 export const Cart = () => {
 
-    const { selectedCustomer } = useCustomer()
     const { handlePreviousStep, handleNextStep } = useSale()
-    const { cartItems, handleAddItem } = useCart()
-    const { control, handleSubmit } = useForm<SelectSaleTypeSchema>({
+    const { cartItems, handleStartCartProductEditing, cartResume, confirmRemoveFromCart } = useCart()
+    const { handleSubmit } = useForm<SelectSaleTypeSchema>({
         resolver: zodResolver(selectSaleTypeSchema)
     })
 
     const onSubmit = (data: SelectSaleTypeSchema) => {
         console.log(data);
     }
+    console.log({ cartResume });
 
     return (
-        <Stack className={styles.container}>
+        <Stack className={styles.container} sx={{
+            paddingBottom: "calc(10px + 110px + 2.25rem + 1.25rem)"
+        }}>
             <List.Root>
+                <CartQtdLabel cartItems={cartItems} />
                 {
-                    cartItems?.length === 0 && <CartEmpty />
+                    cartItems?.length ?
+                        cartItems.map((item, index) => {
+                            const itemInfo = getItemInfo(item)
+                            return <List.Item
+                                info={{ ...itemInfo }}
+                                key={item.codProd.toString()}
+                                raised={index === 1}
+                                image={item.imagem}
+                                showLines
+                            >
+                                {extraFields ? extraFields(item) : null}
+                                {listActions ? listActions({ index, handleRemoveFromCart: confirmRemoveFromCart, handleEditCartProduct: handleStartCartProductEditing }) : null}
+                            </List.Item>
+                        })
+                        : null
                 }
             </List.Root>
-            <Container className={styles.resumeContainer}>
-                <Grid container spacing={2}>
-                    <Grid item xs={4}>
-                        <SimpleInfo label="T. Itens" value="1" vertical={true} />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <SimpleInfo label="Total Desc %" value="0,00" vertical={true} />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <SimpleInfo label="Total Desc R$" value="R$ 0,00" vertical={true} />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <SimpleInfo label="Qtd. Itens" value="1" vertical={true} />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <SimpleInfo label="Valor Bruto R$" value="R$ 239,99" vertical={true} />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <SimpleInfo label="Valor Líq R$" value="R$ 239,99" vertical={true} />
-                    </Grid>
-                </Grid>
-            </Container>
+            <CartResume resume={cartResume} />
             <form className={styles.actionsContainer} onSubmit={handleSubmit(onSubmit)} >
                 <FixedFooterActions>
                     <CustomButton
@@ -85,6 +83,8 @@ export const Cart = () => {
                         onClick={() => { }}
                     />
                 </FixedFooterActions>
+                <FixedFooterBackdrop height="calc(40px + 70px + 2.25rem + 1.25rem)" /> {/*Altura do FixedFooterActions + resumeContainer + padding*/}
+
             </form>
         </Stack>
     )

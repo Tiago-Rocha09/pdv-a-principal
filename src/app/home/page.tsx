@@ -16,7 +16,6 @@ import colors from '@/styles/variables.module.scss'
 export default function Home() {
     const router = useRouter()
     const { user, logout } = useAuth()
-    console.log(user);
 
     return (
         <PageWrapper>

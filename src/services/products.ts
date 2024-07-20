@@ -26,4 +26,21 @@ export const productService = {
       }));
     return result;
   },
+  getProductStock: async (codLoja: number, codProd: string) => {
+    const result = await api
+      .get(`/pdv/product/${codProd}`, {
+        params: {
+          codLoja,
+        },
+      })
+      .then(({ data, status }) => ({
+        status,
+        data,
+      }))
+      .catch(({ response }) => ({
+        status: response.status,
+        data: response.data,
+      }));
+    return result;
+  },
 };

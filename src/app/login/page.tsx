@@ -23,7 +23,6 @@ export default function Login() {
     const watchStore = watch('store');
 
     const onSubmit = (data: LoginSchema) => {
-        console.log(data);
         login(data)
     }
 

@@ -1,5 +1,5 @@
 export type Product = {
-  codProd: number;
+  codProd: string;
   descricao: string;
   precoVenda: number;
   estoque: number;
@@ -17,5 +17,17 @@ export type CartProduct = {
   quantidade: number;
   valorLiquido: number;
   valorTotal: number;
-  local: number
+  local: number;
 } & Product;
+
+export type ProductStockResponseApi = {
+  CodLocal: number;
+  NomeLocal: string;
+  Estoque: number;
+};
+
+export type ProductStock = {
+  codLocal: number;
+  nomeLocal: string;
+  estoque: number;
+};

@@ -12,8 +12,12 @@ export type SalesSlice = {
     selectedSaleType: number | null;
     configuration: SaleConfigurationResponse | null;
     selectedTabPrice: number | null;
+    cartProductEditing: number | null;
     cartItems: CartProduct[];
     setActiveStep: (activeStep: SalesSlice["sales"]["activeStep"]) => void;
+    setCartProductEditing: (
+      cartProductEditing: SalesSlice["sales"]["cartProductEditing"]
+    ) => void;
     setSelectedCustomer: (selectedUser: Customer | null) => void;
     setConfiguration: (configuration: SaleConfigurationResponse | null) => void;
     setSelectedProduct: (selectedProduct: CartProduct | null) => void;
@@ -36,6 +40,7 @@ const initialState = {
   selectedTabPrice: null,
   configuration: null,
   isLoading: false,
+  cartProductEditing: null,
   cartItems: [],
 };
 
@@ -52,6 +57,7 @@ export const createSalesSlice: StateCreator<SalesSlice, [], [], SalesSlice> = (
       selectedTabPrice: initialState.selectedTabPrice,
       cartItems: initialState.cartItems,
       configuration: initialState.configuration,
+      cartProductEditing: initialState.cartProductEditing,
       setActiveStep: (activeStep: SalesSlice["sales"]["activeStep"]) => {
         set((state) => ({ sales: { ...state.sales, activeStep } }));
       },
@@ -79,6 +85,11 @@ export const createSalesSlice: StateCreator<SalesSlice, [], [], SalesSlice> = (
       },
       setCartItems: (cartItems: SalesSlice["sales"]["cartItems"]) => {
         set((state) => ({ sales: { ...state.sales, cartItems } }));
+      },
+      setCartProductEditing: (
+        cartProductEditing: SalesSlice["sales"]["cartProductEditing"]
+      ) => {
+        set((state) => ({ sales: { ...state.sales, cartProductEditing } }));
       },
     },
   };

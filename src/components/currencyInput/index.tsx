@@ -11,7 +11,7 @@ type CustomInputProps<T extends FieldValues> = {
     max?: number
     min?: number
     maskType?: string
-    customOnChange?: (value?: string, field?: string) => void
+    customOnChange?: (value?: number, field?: string) => void
 } & UseControllerProps<T>
     & TextFieldProps
 
@@ -34,12 +34,12 @@ export const CurrencyInput = <T extends FieldValues>({ control, name, label, hid
     })
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const rawValue = parseCurrencyValue(event.target.value);
-        if (max && (Number(rawValue) / 100) > max) {
+        const rawValue = Number(parseCurrencyValue(event.target.value));
+        if (max && (rawValue / 100) > max) {
             toast.error(`O valor máximo permitido é ${formatNumber(max, 'currency')}`)
             return
         }
-        if (min && (Number(rawValue) / 100) < min) {
+        if (min && (rawValue / 100) < min) {
             toast.error(`O valor mínimo permitido é ${formatNumber(min, 'currency')}`)
             return
         }

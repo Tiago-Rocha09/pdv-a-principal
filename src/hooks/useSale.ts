@@ -4,6 +4,7 @@ import { Customer } from "@/types/customer";
 import { SaleConfigurationResponse, SaleTypeResponse } from "@/types/sales";
 import { OptionSelect, OptionSelectApi } from "@/types/select";
 import { useCallback, useState } from "react";
+import { useAlert } from "./useAlert";
 
 const steps = [
   0, //Buscar/selecionar cliente
@@ -19,6 +20,7 @@ type SalesTypeOptionSelect = {
 } & OptionSelect;
 
 export const useSale = () => {
+  const { showAlert } = useAlert();
   const storeId = useStore((state) => state.login.user?.storeId) as number;
   const [activeStep, setActiveStep] = useStore((state) => [
     state.sales.activeStep,
@@ -116,6 +118,16 @@ export const useSale = () => {
     }
   };
 
+  const handleGoToStep = (step: number) => {
+    if (steps.indexOf(step) < 0) {
+      return showAlert({
+        title: "Erro ao acessar página",
+        text: "Não conseguimos identificar qual etapa você deve acessar",
+      });
+    }
+    setActiveStep(step);
+  };
+
   return {
     activeStep,
     saleTypes,
@@ -129,5 +141,6 @@ export const useSale = () => {
     handleSelectSaleType,
     handleNextStep,
     getConfiguration,
+    handleGoToStep
   };
 };

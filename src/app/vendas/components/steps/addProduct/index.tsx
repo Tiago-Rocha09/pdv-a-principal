@@ -22,29 +22,28 @@ import { useEffect } from "react"
 import { NumberFormatInput } from "@/components/numberFormat"
 
 const extraFields = (item: CartProduct) => {
-    console.log({ item });
 
     return <Grid container sx={{ marginTop: "0.5rem" }}>
-        <Grid item xs={6}><Label text={`V.B.: `} />{formatNumber(item.precoVenda, 'currency')}</Grid>
-        <Grid item xs={6} textAlign="right"><Label text={`Desc: `} />{formatNumber(item.desconto, 'decimal')}%</Grid>
-        <Grid item xs={3}><Label text={`Local: `} />{item.local}</Grid>
-        <Grid item xs={3} textAlign="center"><Label text={`Qtd: `} />{item.quantidade}</Grid>
-        <Grid item xs={6} textAlign="right"><Label text={`V.L.: `} />{formatNumber(item.valorLiquido * item.quantidade, 'currency')}</Grid>
+        <Grid item xs={6}><Label text={`V.B.: `} />{formatNumber(item?.precoVenda, 'currency')}</Grid>
+        <Grid item xs={6} textAlign="right"><Label text={`Desc: `} />{formatNumber(item?.desconto, 'decimal')}%</Grid>
+        <Grid item xs={3}><Label text={`Local: `} />{item?.local}</Grid>
+        <Grid item xs={3} textAlign="center"><Label text={`Qtd: `} />{item?.quantidade}</Grid>
+        <Grid item xs={6} textAlign="right"><Label text={`V.L.: `} />{formatNumber(item?.valorLiquido * item?.quantidade, 'currency')}</Grid>
     </Grid >
 }
 
 const getItemInfo = (item: CartProduct) => {
     return {
-        'Cód. Prod:': item.codProd,
-        'Descrição:': item.descricao,
+        'Cód. Prod:': item?.codProd,
+        'Descrição:': item?.descricao,
     }
 }
 
 export const AddProduct = () => {
 
-    const { handlePreviousStep, handleNextStep } = useSale()
-    const { handleAddItem, selectedProduct, handleUpdateSelectedProduct } = useCart()
-    const { control, handleSubmit, setValue, formState: { errors } } = useForm<AddProductSchema>({
+    const { handlePreviousStep } = useSale()
+    const { handleAddItem, handleUpdateItem, selectedProduct, handleUpdateSelectedProduct, onErrorSubmit, cartProductEditing } = useCart()
+    const { control, handleSubmit, setValue } = useForm<AddProductSchema>({
         resolver: zodResolver(addProductSchema),
         defaultValues: {
             desconto: (selectedProduct?.desconto || 0) * 100,
@@ -53,8 +52,11 @@ export const AddProduct = () => {
         }
     })
 
-    const onSubmit = (data: AddProductSchema) => {
-        handleAddItem(selectedProduct as CartProduct)
+    const onSubmit = () => {
+        if (Number.isInteger(cartProductEditing)) {
+            return handleUpdateItem()
+        }
+        handleAddItem()
     }
 
     const itemInfo = getItemInfo(selectedProduct as CartProduct)
@@ -64,7 +66,7 @@ export const AddProduct = () => {
 
     return (
         <Stack className={styles.container}>
-            <form className={styles.formContainer} onSubmit={handleSubmit(onSubmit)} >
+            <form className={styles.formContainer} onSubmit={handleSubmit(onSubmit, onErrorSubmit)} >
                 <Grid container spacing={2}>
                     <Grid item xs={6}><SimpleInfo label="Cód. produto:" value={selectedProduct?.codProd || ''} vertical={true} showLines={true} /></Grid>
                     <Grid item xs={6}><SimpleInfo label="Valor bruto UN" value={selectedProduct?.precoVenda || 0} vertical={true} showLines={true} /></Grid>
@@ -92,7 +94,7 @@ export const AddProduct = () => {
                         width="40%"
                     />
                     <CustomButton
-                        text="Adicionar"
+                        text={Number.isInteger(cartProductEditing) ? "Atualizar" : "Adicionar"}
                         startIcon={<FaCheck />}
                         type="submit"
                         width="60%"

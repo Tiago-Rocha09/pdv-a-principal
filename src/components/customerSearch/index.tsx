@@ -34,7 +34,6 @@ export const SearchCustomer = ({ listActions }: SearchCustormerProps) => {
     })
 
     const onSubmit = (data: CustomerSearchSchema) => {
-        console.log(data);
         listCustomers(data.searchTerm)
     }
 

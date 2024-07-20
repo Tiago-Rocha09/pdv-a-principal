@@ -7,9 +7,7 @@ export const useAlert = () => {
   const [swalShown, setSwalShown] = useState(false);
 
   const showAlert = (props: SweetAlertOptions) => {
-    MySwal.fire(props).then(() => {
-      return console.log("saiu ok");
-    });
+    return MySwal.fire(props)
   };
 
   return { showAlert };
