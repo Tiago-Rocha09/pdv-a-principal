@@ -7,7 +7,7 @@ import styles from '../styles.module.scss'
 export const listActions = (
     item: Product,
     handleSelectProduct: (item: Product) => void,
-    getProductStock: (codProd: string) => Promise<void>
+    getProductStock: (item: Product) => Promise<void>
 ) => {
     return (<List.Actions>
         <List.Action
@@ -16,7 +16,7 @@ export const listActions = (
             type="button"
             className={styles.outlined}
             variant="outlined"
-            onClick={() => getProductStock(item.codProd)}
+            onClick={() => getProductStock(item)}
         />
         <List.Action
             text='Adicionar'

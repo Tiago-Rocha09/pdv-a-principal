@@ -11,6 +11,7 @@ import { Chip } from "@mui/material"
 import List from "@/components/list"
 import { useProduct } from '@/hooks/useProduct'
 import { Product } from '@/types/product'
+import { ModalLocalStock } from './components/modalLocalStock'
 
 type ProductSearchProps = {
     listActions?: (item: Product) => JSX.Element
@@ -52,7 +53,7 @@ export const ProductSearch = ({ listActions, extraFields }: ProductSearchProps) 
                         return <List.Item
                             info={{ ...itemInfo }}
                             key={item.codProd.toString()}
-                            raised={index === 1}
+                            raised
                             image={item.imagem}
                         >
                             {extraFields ? extraFields(item) : null}
@@ -61,6 +62,7 @@ export const ProductSearch = ({ listActions, extraFields }: ProductSearchProps) 
                     })
                 }
             </List.Root>
+            <ModalLocalStock />
         </>
     )
 }

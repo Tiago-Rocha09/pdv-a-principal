@@ -9,3 +9,40 @@
     margin-top: 1rem;
   }
 }
+
+.containerItemStock {
+  // width: 100%;
+  // display: flex;
+  // flex-direction: row;
+  // justify-content: space-between;
+
+  border-bottom: solid 1px $blue;
+}
+
+.itemStockContent {
+  width: 100%;
+  justify-content: space-between;
+  label{
+    color: $black;
+  }
+
+  &:hover{
+    opacity: 0.9;
+  }
+}
+
+.dialogContentContainer{
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: $pink-strong;
+  }
+  
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: $pink;
+  }
+}

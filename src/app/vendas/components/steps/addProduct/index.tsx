@@ -42,7 +42,9 @@ const getItemInfo = (item: CartProduct) => {
 export const AddProduct = () => {
 
     const { handlePreviousStep } = useSale()
-    const { handleAddItem, handleUpdateItem, selectedProduct, handleUpdateSelectedProduct, onErrorSubmit, cartProductEditing } = useCart()
+    const { handleAddItem, handleUpdateItem, selectedProduct, handleUpdateSelectedProduct, onErrorSubmit, cartProductEditing, handlePreviousStepFromEditing } = useCart()
+    const isEditing = Number.isInteger(cartProductEditing)
+
     const { control, handleSubmit, setValue } = useForm<AddProductSchema>({
         resolver: zodResolver(addProductSchema),
         defaultValues: {
@@ -85,16 +87,16 @@ export const AddProduct = () => {
                 </List.Item>
                 <FixedFooterActions>
                     <CustomButton
-                        text="Voltar"
+                        text={isEditing ? "Cancelar" : "Voltar"}
                         startIcon={<FaArrowLeft color={colors.pinkStrongColor} />}
                         variant="outlined"
                         className={styles.outlined}
                         type="button"
-                        onClick={handlePreviousStep}
+                        onClick={isEditing ? handlePreviousStepFromEditing : handlePreviousStep}
                         width="40%"
                     />
                     <CustomButton
-                        text={Number.isInteger(cartProductEditing) ? "Atualizar" : "Adicionar"}
+                        text={isEditing ? "Atualizar" : "Adicionar"}
                         startIcon={<FaCheck />}
                         type="submit"
                         width="60%"

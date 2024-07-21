@@ -141,6 +141,6 @@ export const useSale = () => {
     handleSelectSaleType,
     handleNextStep,
     getConfiguration,
-    handleGoToStep
+    handleGoToStep,
   };
 };

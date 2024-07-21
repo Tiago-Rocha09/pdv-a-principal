@@ -36,11 +36,11 @@ export const CurrencyInput = <T extends FieldValues>({ control, name, label, hid
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const rawValue = Number(parseCurrencyValue(event.target.value));
         if (max && (rawValue / 100) > max) {
-            toast.error(`O valor máximo permitido é ${formatNumber(max, 'currency')}`)
+            toast.error(`O valor máximo permitido é ${formatNumber(max, 'decimal')}`)
             return
         }
         if (min && (rawValue / 100) < min) {
-            toast.error(`O valor mínimo permitido é ${formatNumber(min, 'currency')}`)
+            toast.error(`O valor mínimo permitido é ${formatNumber(min, 'decimal')}`)
             return
         }
         field.onChange(rawValue);

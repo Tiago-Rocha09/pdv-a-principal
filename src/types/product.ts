@@ -20,14 +20,36 @@ export type CartProduct = {
   local: number;
 } & Product;
 
-export type ProductStockResponseApi = {
+type ProductStockResponseApi = {
   CodLocal: number;
   NomeLocal: string;
   Estoque: number;
 };
 
-export type ProductStock = {
+type ProductTabPriceResponseApi = {
+  NomeTabela: string;
+  PrecoVenda: number;
+  TextoValorVenda: string;
+};
+
+export type FindProductResponseApi = {
+  localEstoque: ProductStockResponseApi[];
+  tabelaPreco: ProductTabPriceResponseApi[];
+};
+
+export type ProductStockItem = {
   codLocal: number;
   nomeLocal: string;
   estoque: number;
+};
+
+type ProductTabPriceItem = {
+  nomeTabela: string;
+  precoVenda: number;
+  textoValorVenda: string;
+};
+
+export type ProductStock = {
+  localEstoque: ProductStockItem[];
+  tabelaPreco: ProductTabPriceItem[];
 };

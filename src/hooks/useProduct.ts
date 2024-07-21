@@ -1,20 +1,37 @@
 import { productService } from "@/services/products";
 import { useStore } from "@/store";
-import { Customer } from "@/types/customer";
 import {
+  CartProduct,
+  FindProductResponseApi,
   Product,
-  ProductStock,
-  ProductStockResponseApi,
+  ProductStockItem,
 } from "@/types/product";
 import { useState } from "react";
+import { useCart } from "./useCart";
 
 export const useProduct = () => {
+  const {
+    handleSelectProductToModal,
+    handleSelectProductFromModal,
+    checkQuantity,
+    selectedProduct,
+  } = useCart();
   const storeId = useStore((state) => state.login.user?.storeId) as number;
   const tabPrice = useStore((state) => state.sales.selectedTabPrice) as number;
 
   const [products, setProducts] = useState<Product[]>([]);
-  const [productStock, setProductStock] = useState<ProductStock[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useStore((state) => [
+    state.product.isLoading,
+    state.product.setIsLoading,
+  ]);
+  const [productStock, setProductStock] = useStore((state) => [
+    state.product.productStock,
+    state.product.setProductStock,
+  ]);
+  const [showModalLocalStock, setShowModalLocalStock] = useStore((state) => [
+    state.product.showModalLocalStock,
+    state.product.setShowModalLocalStock,
+  ]);
 
   const listProducts = async (searchTerm: string) => {
     try {
@@ -40,37 +57,39 @@ export const useProduct = () => {
     }
   };
 
-  const getProductStock = async (codProd: string) => {
+  const getProductStock = async (product: Product) => {
     try {
       setIsLoading(true);
-      const response = await productService.getProductStock(storeId, codProd);
+      setShowModalLocalStock(true);
+      const response = await productService.getProductStock(
+        storeId,
+        product.codProd
+      );
       console.log({ response });
 
-      setIsLoading(false);
       if (response.status === 200) {
-        const productStock: ProductStockResponseApi[] = response.data;
-        console.log(
-          productStock.map((item) => ({
+        const data: FindProductResponseApi = response.data;
+        handleSelectProductToModal(product);
+        setProductStock({
+          localEstoque: data.localEstoque.map((item) => ({
             codLocal: item.CodLocal,
             nomeLocal: item.NomeLocal,
             estoque: item.Estoque,
-          }))
-        );
-
-        return setProductStock(
-          productStock.map((item) => ({
-            codLocal: item.CodLocal,
-            nomeLocal: item.NomeLocal,
-            estoque: item.Estoque,
-          }))
-        );
+          })),
+          tabelaPreco: data.tabelaPreco.map((item) => ({
+            nomeTabela: item.NomeTabela,
+            precoVenda: item.PrecoVenda,
+            textoValorVenda: item.TextoValorVenda,
+          })),
+        });
+        return setIsLoading(false);
       }
-      setProductStock([]);
+      setProductStock(null);
     } catch (error) {
       console.log({ error });
       setIsLoading(false);
 
-      setProductStock([]);
+      setProductStock(null);
     }
   };
 
@@ -84,11 +103,31 @@ export const useProduct = () => {
     }
   };
 
+  const handleCloseModalLocalStock = () => {
+    setShowModalLocalStock(false);
+    setProductStock(null);
+  };
+
+  const handleSelectProductFromDifferentLocal = (item: ProductStockItem) => {
+    const selected = {
+      ...selectedProduct as CartProduct,
+      estoque: item.estoque || 0,
+    };
+    if (!checkQuantity(selected)) return;
+    handleSelectProductFromModal(item);
+    setShowModalLocalStock(false);
+    setProductStock(null);
+  };
+
   return {
     products,
     isLoading,
+    showModalLocalStock,
+    productStock,
     listProducts,
     totalProducts,
     getProductStock,
+    handleCloseModalLocalStock,
+    handleSelectProductFromDifferentLocal,
   };
 };

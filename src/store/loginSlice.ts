@@ -35,10 +35,10 @@ export const createLoginSlice: StateCreator<LoginSlice, [], [], LoginSlice> = (
       user: storedUser ? JSON.parse(storedUser) : initialState.user,
       accessToken: storedAccessToken || initialState.accessToken,
       setAccessToken: (accessToken: LoginSlice["login"]["accessToken"]) => {
-        set((state) => ({ ...state, accessToken }));
+        set((state) => ({ login: { ...state.login, accessToken } }));
       },
       setUser: (user: LoginSlice["login"]["user"]) => {
-        set((state) => ({ ...state, user }));
+        set((state) => ({ login: { ...state.login, user } }));
       },
     },
   };

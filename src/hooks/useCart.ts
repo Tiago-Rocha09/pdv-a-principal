@@ -1,5 +1,5 @@
 import { useStore } from "@/store";
-import { CartProduct, Product } from "@/types/product";
+import { CartProduct, Product, ProductStockItem } from "@/types/product";
 import { useSale } from "./useSale";
 import { AddProductSchema } from "@/app/vendas/components/steps/addProduct/addProduct.schema";
 import { useAlert } from "./useAlert";
@@ -49,6 +49,34 @@ export const useCart = () => {
 
     setSelectedProduct(selected);
     handleNextStep();
+  };
+
+  //Chamado quando clica em "Detalhes" na pesquisa de produtos
+  const handleSelectProductToModal = (item: Product) => {
+    const selected: CartProduct = {
+      ...item,
+      desconto: 0,
+      local: storeId,
+      quantidade: 1,
+      valorLiquido: item.precoVenda,
+      valorTotal: item.precoVenda,
+    };
+
+    setSelectedProduct(selected);
+  };
+
+  //Chamdo quando clica em uma das opções do modal de locais de estoque
+  //direciona para a página de adicionar no carrinho, passando o local escolhido pelo fucionário
+  const handleSelectProductFromModal = (customLocal: ProductStockItem) => {
+    const selected: CartProduct = {
+      ...(selectedProduct as CartProduct),
+      estoque: customLocal.estoque || 0,
+      local: customLocal.codLocal,
+    };
+    if (!checkQuantity(selected)) return;
+
+    setSelectedProduct(selected);
+    handleGoToStep(1.2);
   };
 
   const calculaValorTotal = (newSelectedProduct: CartProduct) => {
@@ -245,6 +273,11 @@ export const useCart = () => {
     handleGoToStep(1.2);
   };
 
+  const handlePreviousStepFromEditing = () => {
+    setSelectedProduct(null);
+    handleGoToStep(1);
+  };
+
   return {
     cartItems,
     selectedProduct,
@@ -257,5 +290,9 @@ export const useCart = () => {
     confirmRemoveFromCart,
     handleStartCartProductEditing,
     handleUpdateItem,
+    handleSelectProductToModal,
+    handleSelectProductFromModal,
+    checkQuantity,
+    handlePreviousStepFromEditing,
   };
 };
