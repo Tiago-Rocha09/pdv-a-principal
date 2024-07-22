@@ -24,11 +24,10 @@ export default function Home() {
       </hgroup>
       <div className={styles.container}>
         <ActionCard title="Vendas" icon={<FaRegMoneyBillAlt color="white" size={64} />} href="/vendas" />
-        <ActionCard title="Produtos" icon={<FaGift color="white" size={64} />} href="/produtos" />
-        <ActionCard title="Clientes" icon={<FaUser color="white" size={64} />} href="/clientes" />
-        <ActionCard title="Metas" icon={<GiNetworkBars color="white" size={64} />} href="" />
-        <ActionCard title="CRM" icon={<FaAddressBook color="white" size={64} />} href="" />
-        <ActionCard title="Configurações" icon={<TbSettingsCog color="white" size={64} />} href="" />
+        <ActionCard title="Produtos" icon={<FaGift color="white" size={64} />} href="/produtos" disabled />
+        <ActionCard title="Clientes" icon={<FaUser color="white" size={64} />} href="/clientes" disabled />
+        <ActionCard title="Metas" icon={<GiNetworkBars color="white" size={64} />} href="" disabled />
+        <ActionCard title="CRM" icon={<FaAddressBook color="white" size={64} />} href="" disabled />
       </div>
       <CustomButton text="Sair" onClick={() => logout()} bgColor={colors.blueColor} width="24rem" />
     </PageWrapper>
