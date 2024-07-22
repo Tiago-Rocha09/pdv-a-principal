@@ -36,6 +36,6 @@ export const getCartResume = (cartItems: CartProduct[], installments: SaleInstal
     return acc + curr.value
   }, 0)
 
-  resume.valorRestanteNegociacao = resume.valorLiquido - valorParcelasNegociacao
+  resume.valorRestanteNegociacao = Number((resume.valorLiquido - valorParcelasNegociacao).toFixed(2))
   return resume
 }

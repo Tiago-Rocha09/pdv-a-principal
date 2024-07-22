@@ -1,3 +1,4 @@
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import colors from '@/styles/variables.module.scss'
 import { CustomButton } from '@/components/button'
@@ -75,6 +76,7 @@ export const Negotiation = () => {
   }, [listPaymentMethods])
 
   useEffect(() => {
+    console.log(cartResume.valorRestanteNegociacao)
     if (watchPaymentMethod && !getValues('value')) {
       reset({
         ...getValues(),

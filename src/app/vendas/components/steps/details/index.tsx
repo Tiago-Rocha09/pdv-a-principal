@@ -1,3 +1,4 @@
+import React from 'react'
 import { CustomInput } from '@/components/input'
 import { useForm } from 'react-hook-form'
 import colors from '@/styles/variables.module.scss'
@@ -5,12 +6,8 @@ import { CustomButton } from '@/components/button'
 
 import styles from './styles.module.scss'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCustomer } from '@/hooks/useCustomer'
-import { Chip, FormGroup, Stack } from '@mui/material'
-import List from '@/components/list'
-import { FaArrowLeft, FaArrowRight, FaCheck } from 'react-icons/fa'
-import { Customer } from '@/types/customer'
-import { SimpleInfo } from '@/components/simpleInfo'
+import { CircularProgress, FormGroup, Stack } from '@mui/material'
+import { FaArrowLeft, FaCheck } from 'react-icons/fa'
 import { Select } from '@/components/select'
 import { useSale } from '@/hooks/useSale'
 import { useEffect } from 'react'
@@ -20,8 +17,7 @@ import { detailsSchema, DetailsSchema } from './details.schema'
 import { Label } from '@/components/label'
 
 export const SaleDetails = () => {
-  const { deliveryStatus, listDeliveryStatus, handlePreviousStep, handleSubmitSale } =
-    useSale()
+  const { deliveryStatus, listDeliveryStatus, handlePreviousStep, handleSubmitSale, isLoading } = useSale()
   const { control, handleSubmit } = useForm<DetailsSchema>({
     resolver: zodResolver(detailsSchema),
   })
@@ -53,13 +49,25 @@ export const SaleDetails = () => {
         <FixedFooterActions>
           <CustomButton
             text="Voltar"
-            startIcon={<FaArrowLeft color={colors.pinkStrongColor} />}
+            startIcon={
+              isLoading ? (
+                <CircularProgress size={20} style={{ color: colors.pinkStrongColor }} />
+              ) : (
+                <FaArrowLeft color={colors.pinkStrongColor} />
+              )
+            }
             variant="outlined"
             className={styles.outlined}
             type="button"
             onClick={handlePreviousStep}
+            isLoading={isLoading}
           />
-          <CustomButton text="Enviar" endIcon={<FaCheck />} type="submit" />
+          <CustomButton
+            text="Enviar"
+            endIcon={isLoading ? <CircularProgress size={20} /> : <FaCheck />}
+            type="submit"
+            isLoading={isLoading}
+          />
         </FixedFooterActions>
       </form>
     </Stack>

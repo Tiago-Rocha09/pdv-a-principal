@@ -1,7 +1,7 @@
 import { salesService } from '@/services/sales'
 import { useStore } from '@/store'
 import { Customer } from '@/types/customer'
-import { SaleConfigurationResponse, SaleInstallment, SaleTypeResponse } from '@/types/sales'
+import { SaleConfigurationResponse, SaleInstallment, SaleTypeResponse, SavePurchase } from '@/types/sales'
 import { OptionSelect, OptionSelectApi } from '@/types/select'
 import { useCallback, useState } from 'react'
 import { useAlert } from './useAlert'
@@ -10,7 +10,7 @@ import { UseFormReset } from 'react-hook-form'
 import dayjs, { Dayjs } from 'dayjs'
 import { formatNumber } from '@/utils/mask'
 import { DetailsSchema } from '@/app/vendas/components/steps/details/details.schema'
-import { useCart } from './useCart'
+import { useRouter } from 'next/navigation'
 import { getCartResume } from '@/utils/functions'
 
 const steps = [
@@ -29,12 +29,14 @@ type SalesTypeOptionSelect = {
 } & OptionSelect
 
 export const useSale = () => {
+  const router = useRouter()
+
   const { showAlert } = useAlert()
   // const { cartResume, cartItems } = useCart()
   const storeId = useStore((state) => state.login.user?.storeId) as number
   const [activeStep, setActiveStep] = useStore((state) => [state.sales.activeStep, state.sales.setActiveStep])
   const [isLoading, setIsLoading] = useStore((state) => [state.sales.isLoading, state.sales.setIsLoading])
-  const cartItems = useStore((state) => state.sales.cartItems)
+  const [cartItems, setCartItems] = useStore((state) => [state.sales.cartItems, state.sales.setCartItems])
 
   const [installments, setInstallments] = useStore((state) => [
     state.sales.installments,
@@ -313,25 +315,72 @@ export const useSale = () => {
     setNumberEditing(null)
   }
 
-  const handleSubmitSale = (detailsData: DetailsSchema) => {
+  const handleSubmitSale = async (detailsData: DetailsSchema) => {
     console.log(detailsData)
     const cartResume = getCartResume(cartItems, installments)
-    const body = {
+    const body: SavePurchase = {
       codLoja: storeId,
-      codCliente: selectedCustomer?.codCliente,
-      nomeCliente: selectedCustomer?.nomeCliente,
+      codCliente: selectedCustomer?.codCliente as number,
+      nomeCliente: selectedCustomer?.nomeCliente as string,
       valorBruto: cartResume.valorBruto,
       valorLiquido: cartResume.valorLiquido,
       codTipoEntrega: detailsData.deliveryType,
       codTipoStatus: detailsData.deliveryStatus,
-      observacao: detailsData.observation,
-      produtos: cartItems,
-      parcelas: installments,
-      tipoVenda: selectedSaleType,
-      tabPreco: selectedTabPrice,
+      observacao: detailsData.observation || null,
+      produtos: cartItems.map((item) => {
+        return {
+          codProd: item.codProd,
+          desconto: item.desconto,
+          localEstoque: item.local,
+          precoVenda: item.precoVenda,
+          quantidade: item.quantidade,
+          textoPromocao: item.textoPromocao,
+          valorTotal: item.valorTotal,
+        }
+      }),
+      parcelas: installments.map((item) => {
+        return {
+          formaPagamento: item.paymentMethod,
+          valor: item.value,
+          vencimento: item.dueDate,
+        }
+      }),
+      tipoVenda: selectedSaleType as number,
+      tabPreco: selectedTabPrice as number,
       localEstoque: storeId,
     }
-    console.log({ body })
+
+    try {
+      setIsLoading(true)
+      const response = await salesService.saveSale(body)
+      if (response.status === 201) {
+        const data: { numOrc: number } = response.data
+        showAlert({
+          icon: 'success',
+          title: 'Orçamento criado',
+          html: `Número do orçamento <strong>${data.numOrc}</strong>`,
+          showCancelButton: false,
+          confirmButtonText: 'Fechar',
+        })
+          .then((props) => {
+            setCartItems([])
+            setInstallments([])
+            setSelectedCustomer(null)
+            setSelectedSaleType(null)
+            setSelectedTabPrice(null)
+            handleGoToStep(0)
+            router.push('/home')
+          })
+          .catch((error) => {
+            console.log({ error })
+          })
+      } else {
+        setConfiguration(null)
+      }
+      setIsLoading(false)
+    } catch (error) {
+      setConfiguration(null)
+    }
   }
 
   return {
