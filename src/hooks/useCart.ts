@@ -5,6 +5,7 @@ import { AddProductSchema } from '@/app/vendas/components/steps/addProduct/addPr
 import { useAlert } from './useAlert'
 import { UseFormSetValue } from 'react-hook-form'
 import { formatNumber } from '@/utils/mask'
+import { getCartResume } from '@/utils/functions'
 
 export type CarResumeProps = {
   itens: number
@@ -197,45 +198,7 @@ export const useCart = () => {
     })
   }
 
-  const getCartResume = (): CarResumeProps => {
-    const resume = cartItems.reduce(
-      (acc, curr) => {
-        return {
-          ...acc,
-          itens: acc.itens + 1,
-          qtd: acc.qtd + curr.quantidade,
-          valorBruto: acc.valorBruto + curr.precoVenda * curr.quantidade,
-          valorLiquido: acc.valorLiquido + curr.valorTotal,
-        }
-      },
-      {
-        itens: 0,
-        qtd: 0,
-        valorBruto: 0,
-        valorLiquido: 0,
-        descontoReal: 0,
-        descontoPorcentagem: 0,
-        valorRestanteNegociacao: 0,
-      },
-    )
-    resume.valorBruto = Number(resume.valorBruto.toFixed(2))
-    resume.valorLiquido = Number(resume.valorLiquido.toFixed(2))
-
-    resume.descontoReal = resume.valorBruto - resume.valorLiquido
-    resume.descontoReal = Number(resume.descontoReal.toFixed(2))
-
-    resume.descontoPorcentagem = resume.valorBruto ? (resume.descontoReal / resume.valorBruto) * 100 : 0
-    resume.descontoPorcentagem = Number(resume.descontoPorcentagem.toFixed(2))
-
-    const valorParcelasNegociacao = installments.reduce((acc, curr) => {
-      return acc + curr.value
-    }, 0)
-
-    resume.valorRestanteNegociacao = resume.valorLiquido - valorParcelasNegociacao
-    return resume
-  }
-
-  const cartResume = getCartResume()
+  const cartResume = getCartResume(cartItems, installments)
 
   const handleRemoveFromCart = (index: number) => {
     const newCartItems = cartItems.filter((item, i) => index !== i)
@@ -314,6 +277,6 @@ export const useCart = () => {
     checkQuantity,
     handlePreviousStepFromEditing,
     handleGoToNegotiation,
-    handleGoToDetails
+    handleGoToDetails,
   }
 }

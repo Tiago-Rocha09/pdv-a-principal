@@ -9,6 +9,9 @@ import { NegotiationSchema } from '@/app/vendas/components/steps/negotiation/neg
 import { UseFormReset } from 'react-hook-form'
 import dayjs, { Dayjs } from 'dayjs'
 import { formatNumber } from '@/utils/mask'
+import { DetailsSchema } from '@/app/vendas/components/steps/details/details.schema'
+import { useCart } from './useCart'
+import { getCartResume } from '@/utils/functions'
 
 const steps = [
   0, //Buscar/selecionar cliente
@@ -27,10 +30,12 @@ type SalesTypeOptionSelect = {
 
 export const useSale = () => {
   const { showAlert } = useAlert()
+  // const { cartResume, cartItems } = useCart()
   const storeId = useStore((state) => state.login.user?.storeId) as number
   const [activeStep, setActiveStep] = useStore((state) => [state.sales.activeStep, state.sales.setActiveStep])
   const [isLoading, setIsLoading] = useStore((state) => [state.sales.isLoading, state.sales.setIsLoading])
-  const [cartItems, setCartItems] = useStore((state) => [state.sales.cartItems, state.sales.setCartItems])
+  const cartItems = useStore((state) => state.sales.cartItems)
+
   const [installments, setInstallments] = useStore((state) => [
     state.sales.installments,
     state.sales.setInstallments,
@@ -47,11 +52,15 @@ export const useSale = () => {
     state.sales.selectedTabPrice,
     state.sales.setSelectedTabPrice,
   ])
-  const setSelectedCustomer = useStore((state) => state.sales.setSelectedCustomer)
+  const [selectedCustomer, setSelectedCustomer] = useStore((state) => [
+    state.sales.selectedCustomer,
+    state.sales.setSelectedCustomer,
+  ])
 
   const [saleTypes, setSaleTypes] = useState<SalesTypeOptionSelect[]>([])
 
   const [paymentMethods, setPaymentMethods] = useState<OptionSelect[]>([])
+  const [deliveryStatus, setDeliveryStatus] = useState<OptionSelect[]>([])
   const [numberEditing, setNumberEditing] = useState<number | null>(null)
 
   const handleSelectCustomer = (selectedCustomer: Customer) => {
@@ -108,6 +117,27 @@ export const useSale = () => {
       setIsLoading(false)
     } catch (error) {
       setPaymentMethods([])
+    }
+  }, [storeId])
+
+  const listDeliveryStatus = useCallback(async () => {
+    try {
+      setIsLoading(true)
+      const response = await salesService.getDeliveryStatus(storeId)
+      if (response.status === 200) {
+        const data: OptionSelectApi[] = response.data
+        setDeliveryStatus(
+          data.map((item) => ({
+            label: item.name,
+            value: item.id,
+          })),
+        )
+      } else {
+        setDeliveryStatus([])
+      }
+      setIsLoading(false)
+    } catch (error) {
+      setDeliveryStatus([])
     }
   }, [storeId])
 
@@ -283,6 +313,27 @@ export const useSale = () => {
     setNumberEditing(null)
   }
 
+  const handleSubmitSale = (detailsData: DetailsSchema) => {
+    console.log(detailsData)
+    const cartResume = getCartResume(cartItems, installments)
+    const body = {
+      codLoja: storeId,
+      codCliente: selectedCustomer?.codCliente,
+      nomeCliente: selectedCustomer?.nomeCliente,
+      valorBruto: cartResume.valorBruto,
+      valorLiquido: cartResume.valorLiquido,
+      codTipoEntrega: detailsData.deliveryType,
+      codTipoStatus: detailsData.deliveryStatus,
+      observacao: detailsData.observation,
+      produtos: cartItems,
+      parcelas: installments,
+      tipoVenda: selectedSaleType,
+      tabPreco: selectedTabPrice,
+      localEstoque: storeId,
+    }
+    console.log({ body })
+  }
+
   return {
     activeStep,
     saleTypes,
@@ -293,6 +344,7 @@ export const useSale = () => {
     paymentMethods,
     installments,
     numberEditing,
+    deliveryStatus,
     listSaleTypes,
     handleSelectCustomer,
     handlePreviousStep,
@@ -306,5 +358,7 @@ export const useSale = () => {
     confirmRemoveInstallment,
     handleStartEditInstallment,
     handleCancelEditInstallment,
+    listDeliveryStatus,
+    handleSubmitSale,
   }
 }

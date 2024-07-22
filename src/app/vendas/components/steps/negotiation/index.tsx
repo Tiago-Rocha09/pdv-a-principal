@@ -25,6 +25,7 @@ import { OptionSelect } from '@/types/select'
 import List from '@/components/list'
 import { extraFields } from './components/extraFields'
 import { listActions } from './components/listActions'
+import dayjs from 'dayjs'
 
 const getItemInfo = (item: SaleInstallment, paymentMethods: OptionSelect[]) => {
   return {
@@ -50,6 +51,7 @@ export const Negotiation = () => {
     resolver: zodResolver(negotiationSchema),
     defaultValues: {
       quantity: 1,
+      date: dayjs(new Date()),
     },
   })
 
