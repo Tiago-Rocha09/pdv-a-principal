@@ -45,7 +45,7 @@ export const Select = <T extends FieldValues>({
             }}
             placeholder={placeholder}
             options={options}
-            menuPortalTarget={window ? window.document.body : null}
+            menuPortalTarget={typeof window !== "undefined" ? window.document.body : null}
             classNames={{
               control: () => (invalid ? styles.borderError : ''),
               placeholder: () => (invalid ? styles.borderError : ''),
