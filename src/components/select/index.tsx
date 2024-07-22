@@ -33,7 +33,7 @@ export const Select = <T extends FieldValues>({ control, name, label, options, p
                     }}
                     placeholder={placeholder}
                     options={options}
-                    menuPortalTarget={document.body}
+                    menuPortalTarget={window.document.body}
                     classNames={{
                         control: () =>
                             invalid ? styles.borderError : '',
