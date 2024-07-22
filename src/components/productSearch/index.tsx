@@ -12,6 +12,7 @@ import List from "@/components/list"
 import { useProduct } from '@/hooks/useProduct'
 import { Product } from '@/types/product'
 import { ModalLocalStock } from './components/modalLocalStock'
+import { ModalImages } from './components/modalImages'
 
 type ProductSearchProps = {
     listActions?: (item: Product) => JSX.Element
@@ -29,7 +30,7 @@ const getItemInfo = (item: Product) => {
 
 export const ProductSearch = ({ listActions, extraFields }: ProductSearchProps) => {
 
-    const { listProducts, products, isLoading, totalProducts } = useProduct()
+    const { listProducts, products, isLoading, totalProducts, getProductImages } = useProduct()
     const { control, handleSubmit } = useForm<CustomerSearchSchema>({
         resolver: zodResolver(customerSearchSchema)
     })
@@ -55,6 +56,7 @@ export const ProductSearch = ({ listActions, extraFields }: ProductSearchProps) 
                             key={item.codProd.toString()}
                             raised
                             image={item.imagem}
+                            onClickImage={() => getProductImages(item.codProd)}
                         >
                             {extraFields ? extraFields(item) : null}
                             {listActions ? listActions(item) : null}
@@ -63,6 +65,7 @@ export const ProductSearch = ({ listActions, extraFields }: ProductSearchProps) 
                 }
             </List.Root>
             <ModalLocalStock />
+            <ModalImages />
         </>
     )
 }

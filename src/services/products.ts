@@ -43,4 +43,21 @@ export const productService = {
       }));
     return result;
   },
+  getProductImages: async (codLoja: number, codProd: string) => {
+    const result = await api
+      .get(`/pdv/product/${codProd}/images`, {
+        params: {
+          codLoja,
+        },
+      })
+      .then(({ data, status }) => ({
+        status,
+        data,
+      }))
+      .catch(({ response }) => ({
+        status: response.status,
+        data: response.data,
+      }));
+    return result;
+  },
 };

@@ -35,4 +35,21 @@ export const salesService = {
       }));
     return result;
   },
+  getPaymentType: async (codLoja: number) => {
+    const result = await api
+      .get("/pdv/sales/payment-type", {
+        params: {
+          codLoja,
+        },
+      })
+      .then(({ data, status }) => ({
+        status,
+        data,
+      }))
+      .catch(({ response }) => ({
+        status: response.status,
+        data: response.data,
+      }));
+    return result;
+  },
 };

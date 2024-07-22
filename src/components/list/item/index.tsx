@@ -8,16 +8,17 @@ type CustomListItemProps = {
     image?: string;
     children?: ReactNode,
     showLines?: SimpleInfoProps['showLines']
+    onClickImage?: () => void
 } & CardProps
 
-export const CustomListItem = ({ info, image, children, showLines, ...rest }: CustomListItemProps) => {
+export const CustomListItem = ({ info, image, children, showLines, onClickImage = () => {}, ...rest }: CustomListItemProps) => {
 
     return <ListItem className={styles.container}>
         <Card className={styles.card} {...rest}>
             <CardContent>
                 <Grid container spacing={1}>
 
-                    {image && <Grid item xs={3}>
+                    {image && <Grid item xs={3} onClick={onClickImage}>
                         <ListItemAvatar>
                             <Avatar alt="Imagem produto" src={image} variant="square" className={styles.avatar} />
                         </ListItemAvatar>

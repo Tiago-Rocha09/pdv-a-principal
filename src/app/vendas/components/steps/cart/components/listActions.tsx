@@ -17,8 +17,8 @@ export const listActions = ({
 }: listActionsProps) => {
     return (<List.Actions>
         <Stack className={styles.itemActionContainer}>
-            <FaEdit color={colors.pinkStrongColor} size={30} onClick={() => handleEditCartProduct(index)} />
-            <FaTrash color={colors.pinkStrongColor} size={30} onClick={() => handleRemoveFromCart(index)} />
+            <FaEdit color={colors.pinkStrongColor} size={25} onClick={() => handleEditCartProduct(index)} />
+            <FaTrash color={colors.pinkStrongColor} size={25} onClick={() => handleRemoveFromCart(index)} />
         </Stack>
     </List.Actions>)
 }

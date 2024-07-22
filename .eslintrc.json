@@ -1,3 +1,23 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["react"],
+  "rules": {
+    "react/jsx-max-props-per-line": [
+      2,
+      {
+        "when": "always",
+        "maximum": 1
+      }
+    ],
+    "react/jsx-first-prop-new-line": [2, "multiline"]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
 }

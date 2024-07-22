@@ -1,36 +1,32 @@
-import { Customer } from "@/types/customer";
-import { CartProduct } from "@/types/product";
-import { SaleConfigurationResponse } from "@/types/sales";
-import { StateCreator } from "zustand";
+import { Customer } from '@/types/customer'
+import { CartProduct } from '@/types/product'
+import { SaleConfigurationResponse, SaleInstallment } from '@/types/sales'
+import { StateCreator } from 'zustand'
 
 export type SalesSlice = {
   sales: {
-    isLoading: boolean;
-    activeStep: number;
-    selectedCustomer: Customer | null;
-    selectedProduct: CartProduct | null;
-    selectedSaleType: number | null;
-    configuration: SaleConfigurationResponse | null;
-    selectedTabPrice: number | null;
-    cartProductEditing: number | null;
-    cartItems: CartProduct[];
-    setActiveStep: (activeStep: SalesSlice["sales"]["activeStep"]) => void;
-    setCartProductEditing: (
-      cartProductEditing: SalesSlice["sales"]["cartProductEditing"]
-    ) => void;
-    setSelectedCustomer: (selectedUser: Customer | null) => void;
-    setConfiguration: (configuration: SaleConfigurationResponse | null) => void;
-    setSelectedProduct: (selectedProduct: CartProduct | null) => void;
-    setSelectedSaleType: (
-      selectedSaleType: SalesSlice["sales"]["selectedSaleType"]
-    ) => void;
-    setSelectedTabPrice: (
-      selectedTabPrice: SalesSlice["sales"]["selectedTabPrice"]
-    ) => void;
-    setIsLoading: (isLoading: boolean) => void;
-    setCartItems: (cartItems: CartProduct[]) => void;
-  };
-};
+    isLoading: boolean
+    activeStep: number
+    selectedCustomer: Customer | null
+    selectedProduct: CartProduct | null
+    selectedSaleType: number | null
+    configuration: SaleConfigurationResponse | null
+    selectedTabPrice: number | null
+    cartProductEditing: number | null
+    cartItems: CartProduct[]
+    installments: SaleInstallment[]
+    setActiveStep: (activeStep: SalesSlice['sales']['activeStep']) => void
+    setCartProductEditing: (cartProductEditing: SalesSlice['sales']['cartProductEditing']) => void
+    setSelectedCustomer: (selectedUser: Customer | null) => void
+    setConfiguration: (configuration: SaleConfigurationResponse | null) => void
+    setSelectedProduct: (selectedProduct: CartProduct | null) => void
+    setSelectedSaleType: (selectedSaleType: SalesSlice['sales']['selectedSaleType']) => void
+    setSelectedTabPrice: (selectedTabPrice: SalesSlice['sales']['selectedTabPrice']) => void
+    setIsLoading: (isLoading: boolean) => void
+    setCartItems: (cartItems: CartProduct[]) => void
+    setInstallments: (installments: SalesSlice['sales']['installments']) => void
+  }
+}
 
 const initialState = {
   activeStep: 0,
@@ -42,11 +38,10 @@ const initialState = {
   isLoading: false,
   cartProductEditing: null,
   cartItems: [],
-};
+  installments: [],
+}
 
-export const createSalesSlice: StateCreator<SalesSlice, [], [], SalesSlice> = (
-  set
-) => {
+export const createSalesSlice: StateCreator<SalesSlice, [], [], SalesSlice> = (set) => {
   return {
     sales: {
       activeStep: initialState.activeStep,
@@ -58,39 +53,37 @@ export const createSalesSlice: StateCreator<SalesSlice, [], [], SalesSlice> = (
       cartItems: initialState.cartItems,
       configuration: initialState.configuration,
       cartProductEditing: initialState.cartProductEditing,
-      setActiveStep: (activeStep: SalesSlice["sales"]["activeStep"]) => {
-        set((state) => ({ sales: { ...state.sales, activeStep } }));
+      installments: initialState.installments,
+      setActiveStep: (activeStep: SalesSlice['sales']['activeStep']) => {
+        set((state) => ({ sales: { ...state.sales, activeStep } }))
       },
       setSelectedCustomer: (selectedCustomer: Customer | null) => {
-        set((state) => ({ sales: { ...state.sales, selectedCustomer } }));
+        set((state) => ({ sales: { ...state.sales, selectedCustomer } }))
       },
       setSelectedProduct: (selectedProduct: CartProduct | null) => {
-        set((state) => ({ sales: { ...state.sales, selectedProduct } }));
+        set((state) => ({ sales: { ...state.sales, selectedProduct } }))
       },
       setIsLoading: (isLoading: boolean) => {
-        set((state) => ({ sales: { ...state.sales, isLoading } }));
+        set((state) => ({ sales: { ...state.sales, isLoading } }))
       },
       setConfiguration: (configuration: SaleConfigurationResponse | null) => {
-        set((state) => ({ sales: { ...state.sales, configuration } }));
+        set((state) => ({ sales: { ...state.sales, configuration } }))
       },
-      setSelectedSaleType: (
-        selectedSaleType: SalesSlice["sales"]["selectedSaleType"]
-      ) => {
-        set((state) => ({ sales: { ...state.sales, selectedSaleType } }));
+      setSelectedSaleType: (selectedSaleType: SalesSlice['sales']['selectedSaleType']) => {
+        set((state) => ({ sales: { ...state.sales, selectedSaleType } }))
       },
-      setSelectedTabPrice: (
-        selectedTabPrice: SalesSlice["sales"]["selectedTabPrice"]
-      ) => {
-        set((state) => ({ sales: { ...state.sales, selectedTabPrice } }));
+      setSelectedTabPrice: (selectedTabPrice: SalesSlice['sales']['selectedTabPrice']) => {
+        set((state) => ({ sales: { ...state.sales, selectedTabPrice } }))
       },
-      setCartItems: (cartItems: SalesSlice["sales"]["cartItems"]) => {
-        set((state) => ({ sales: { ...state.sales, cartItems } }));
+      setCartItems: (cartItems: SalesSlice['sales']['cartItems']) => {
+        set((state) => ({ sales: { ...state.sales, cartItems } }))
       },
-      setCartProductEditing: (
-        cartProductEditing: SalesSlice["sales"]["cartProductEditing"]
-      ) => {
-        set((state) => ({ sales: { ...state.sales, cartProductEditing } }));
+      setCartProductEditing: (cartProductEditing: SalesSlice['sales']['cartProductEditing']) => {
+        set((state) => ({ sales: { ...state.sales, cartProductEditing } }))
+      },
+      setInstallments: (installments: SalesSlice['sales']['installments']) => {
+        set((state) => ({ sales: { ...state.sales, installments } }))
       },
     },
-  };
-};
+  }
+}

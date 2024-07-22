@@ -4,6 +4,7 @@ import {
   CartProduct,
   FindProductResponseApi,
   Product,
+  ProductImages,
   ProductStockItem,
 } from "@/types/product";
 import { useState } from "react";
@@ -28,9 +29,18 @@ export const useProduct = () => {
     state.product.productStock,
     state.product.setProductStock,
   ]);
+  const [productImages, setProductImages] = useStore((state) => [
+    state.product.productImages,
+    state.product.setProductImages,
+  ]);
   const [showModalLocalStock, setShowModalLocalStock] = useStore((state) => [
     state.product.showModalLocalStock,
     state.product.setShowModalLocalStock,
+  ]);
+
+  const [showModalImages, setShowModalImagese] = useStore((state) => [
+    state.product.showModalImages,
+    state.product.setShowModalImages,
   ]);
 
   const listProducts = async (searchTerm: string) => {
@@ -108,9 +118,13 @@ export const useProduct = () => {
     setProductStock(null);
   };
 
+  const handleCloseModalImages = () => {
+    setShowModalImagese(false);
+  };
+
   const handleSelectProductFromDifferentLocal = (item: ProductStockItem) => {
     const selected = {
-      ...selectedProduct as CartProduct,
+      ...(selectedProduct as CartProduct),
       estoque: item.estoque || 0,
     };
     if (!checkQuantity(selected)) return;
@@ -119,15 +133,40 @@ export const useProduct = () => {
     setProductStock(null);
   };
 
+  const getProductImages = async (codProd: string) => {
+    try {
+      setIsLoading(true);
+      setShowModalImagese(true);
+      const response = await productService.getProductImages(storeId, codProd);
+      console.log({ response });
+
+      if (response.status === 200) {
+        const data: ProductImages[] = response.data;
+        setProductImages(data);
+        return setIsLoading(false);
+      }
+      setProductImages(null);
+    } catch (error) {
+      console.log({ error });
+      setIsLoading(false);
+
+      setProductImages(null);
+    }
+  };
+
   return {
     products,
     isLoading,
     showModalLocalStock,
+    showModalImages,
     productStock,
+    productImages,
     listProducts,
     totalProducts,
     getProductStock,
     handleCloseModalLocalStock,
     handleSelectProductFromDifferentLocal,
+    getProductImages,
+    handleCloseModalImages,
   };
 };

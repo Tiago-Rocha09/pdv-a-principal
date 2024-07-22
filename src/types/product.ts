@@ -53,3 +53,8 @@ export type ProductStock = {
   localEstoque: ProductStockItem[];
   tabelaPreco: ProductTabPriceItem[];
 };
+
+export type ProductImages = {
+  codProd: string;
+  imagem: string;
+};

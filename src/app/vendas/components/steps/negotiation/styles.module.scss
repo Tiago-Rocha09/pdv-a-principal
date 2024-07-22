@@ -3,6 +3,19 @@
 .container {
   width: 100%;
   margin: 2rem auto;
+  padding-bottom: calc(40px + 70px + 1.25rem + 20px); //Altura do FixedFooterBackdrop + 20px
+
+  .outlined {
+    background-color: transparent;
+    // border: $pink;
+    // color: $blue;
+    border: 1px solid $pink-strong;
+    color: $pink-strong;
+  }
+  .button {
+    margin: auto;
+    margin-top: 1rem;
+  }
 
   .resumeContainer {
     position: fixed;
@@ -29,23 +42,7 @@
       padding-inline: 0.5rem;
     }
   }
-  .outlined {
-    background-color: transparent;
-    border: 1px solid $pink-strong;
-    color: $pink-strong;
 
-    @media (max-width: 768px) {
-      gap: 0;
-      span {
-        margin-left: 0;
-        margin-right: 0;
-
-        svg {
-          font-size: 14px;
-        }
-      }
-    }
-  }
   .itemActionContainer {
     width: 100%;
     display: flex;
