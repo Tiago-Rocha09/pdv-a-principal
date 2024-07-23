@@ -1,3 +1,13 @@
+import {
+  STORAGE_KEY_CART_ITEMS,
+  STORAGE_KEY_CUSTOMER_SEARCH_TERM,
+  STORAGE_KEY_NEGOTIATION_INSTALLMENTS,
+  STORAGE_KEY_PRODUCT_SEARCH_TERM,
+  STORAGE_KEY_SALE_CURRENT_STEP,
+  STORAGE_KEY_SELECTED_CUSTOMER,
+  STORAGE_KEY_SELECTED_SALE_TYPE,
+  STORAGE_KEY_SELECTED_TAB_PRICE,
+} from '@/constants'
 import { useCallback } from 'react'
 
 export const useLocalStorage = () => {
@@ -47,5 +57,27 @@ export const useLocalStorage = () => {
     [isBrowser],
   )
 
-  return { setItem, getItem, removeItem }
+  const clearStorage = useCallback(() => {
+    if (isBrowser) {
+      try {
+        const keys = [
+          STORAGE_KEY_SALE_CURRENT_STEP,
+          STORAGE_KEY_CUSTOMER_SEARCH_TERM,
+          STORAGE_KEY_SELECTED_CUSTOMER,
+          STORAGE_KEY_SELECTED_SALE_TYPE,
+          STORAGE_KEY_SELECTED_TAB_PRICE,
+          STORAGE_KEY_PRODUCT_SEARCH_TERM,
+          STORAGE_KEY_CART_ITEMS,
+          STORAGE_KEY_NEGOTIATION_INSTALLMENTS,
+        ]
+        keys.forEach((item) => {
+          window.localStorage.removeItem(item)
+        })
+      } catch (error) {
+        console.error('Error removing localStorage item:', error)
+      }
+    }
+  }, [isBrowser])
+
+  return { setItem, getItem, removeItem, clearStorage }
 }

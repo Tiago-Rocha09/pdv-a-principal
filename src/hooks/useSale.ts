@@ -39,7 +39,7 @@ type SalesTypeOptionSelect = {
 export const useSale = () => {
   const router = useRouter()
 
-  const { setItem } = useLocalStorage()
+  const { setItem, clearStorage } = useLocalStorage()
   const { showAlert } = useAlert()
   // const { cartResume, cartItems } = useCart()
   const storeId = useStore((state) => state.login.user?.storeId) as number
@@ -371,6 +371,7 @@ export const useSale = () => {
             setSelectedCustomer(null)
             setSelectedSaleType(null)
             setSelectedTabPrice(null)
+            clearStorage()
             handleGoToStep(0)
             router.push('/home')
           })
