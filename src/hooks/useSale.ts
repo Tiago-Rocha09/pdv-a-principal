@@ -353,7 +353,6 @@ export const useSale = () => {
       localEstoque: storeId,
     }
     console.log({ body })
-    return
     try {
       setIsLoading(true)
       const response = await salesService.saveSale(body)
