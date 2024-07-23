@@ -17,7 +17,7 @@ import { detailsSchema, DetailsSchema } from './details.schema'
 import { Label } from '@/components/label'
 
 export const SaleDetails = () => {
-  const { deliveryStatus, listDeliveryStatus, handlePreviousStep, handleSubmitSale, isLoading } = useSale()
+  const { deliveryStatus, listDeliveryStatus, handleGoToStep, handleSubmitSale, isLoading } = useSale()
   const { control, handleSubmit } = useForm<DetailsSchema>({
     resolver: zodResolver(detailsSchema),
   })
@@ -59,7 +59,7 @@ export const SaleDetails = () => {
             variant="outlined"
             className={styles.outlined}
             type="button"
-            onClick={handlePreviousStep}
+            onClick={() => handleGoToStep(2)}
             isLoading={isLoading}
           />
           <CustomButton

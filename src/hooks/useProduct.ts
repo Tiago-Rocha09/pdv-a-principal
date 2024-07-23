@@ -1,85 +1,74 @@
-import { productService } from "@/services/products";
-import { useStore } from "@/store";
+import { productService } from '@/services/products'
+import { useStore } from '@/store'
 import {
   CartProduct,
   FindProductResponseApi,
   Product,
   ProductImages,
   ProductStockItem,
-} from "@/types/product";
-import { useState } from "react";
-import { useCart } from "./useCart";
+} from '@/types/product'
+import { useState } from 'react'
+import { useCart } from './useCart'
+import { useLocalStorage } from './useLocalStorage'
+import { STORAGE_KEY_PRODUCT_SEARCH_TERM } from '@/constants'
 
 export const useProduct = () => {
-  const {
-    handleSelectProductToModal,
-    handleSelectProductFromModal,
-    checkQuantity,
-    selectedProduct,
-  } = useCart();
-  const storeId = useStore((state) => state.login.user?.storeId) as number;
-  const tabPrice = useStore((state) => state.sales.selectedTabPrice) as number;
+  const { setItem } = useLocalStorage()
+  const { handleSelectProductToModal, handleSelectProductFromModal, checkQuantity, selectedProduct } =
+    useCart()
+  const storeId = useStore((state) => state.login.user?.storeId) as number
+  const tabPrice = useStore((state) => state.sales.selectedTabPrice) as number
 
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useStore((state) => [
-    state.product.isLoading,
-    state.product.setIsLoading,
-  ]);
+  const [products, setProducts] = useStore((state) => [state.product.products, state.product.setProducts])
+  const [isLoading, setIsLoading] = useStore((state) => [state.product.isLoading, state.product.setIsLoading])
   const [productStock, setProductStock] = useStore((state) => [
     state.product.productStock,
     state.product.setProductStock,
-  ]);
+  ])
   const [productImages, setProductImages] = useStore((state) => [
     state.product.productImages,
     state.product.setProductImages,
-  ]);
+  ])
   const [showModalLocalStock, setShowModalLocalStock] = useStore((state) => [
     state.product.showModalLocalStock,
     state.product.setShowModalLocalStock,
-  ]);
+  ])
 
   const [showModalImages, setShowModalImagese] = useStore((state) => [
     state.product.showModalImages,
     state.product.setShowModalImages,
-  ]);
+  ])
 
   const listProducts = async (searchTerm: string) => {
     try {
-      setIsLoading(true);
-      const response = await productService.getProducts(
-        searchTerm,
-        storeId,
-        storeId,
-        tabPrice
-      );
-      setIsLoading(false);
-      console.log({ response });
+      setIsLoading(true)
+      const response = await productService.getProducts(searchTerm, storeId, storeId, tabPrice)
+      setIsLoading(false)
+      console.log({ response })
 
       if (response.status === 200) {
-        return setProducts(response.data);
+        setItem(STORAGE_KEY_PRODUCT_SEARCH_TERM, searchTerm)
+        return setProducts(response.data)
       }
-      setProducts([]);
+      setProducts([])
     } catch (error) {
-      console.log({ error });
-      setIsLoading(false);
+      console.log({ error })
+      setIsLoading(false)
 
-      setProducts([]);
+      setProducts([])
     }
-  };
+  }
 
   const getProductStock = async (product: Product) => {
     try {
-      setIsLoading(true);
-      setShowModalLocalStock(true);
-      const response = await productService.getProductStock(
-        storeId,
-        product.codProd
-      );
-      console.log({ response });
+      setIsLoading(true)
+      setShowModalLocalStock(true)
+      const response = await productService.getProductStock(storeId, product.codProd)
+      console.log({ response })
 
       if (response.status === 200) {
-        const data: FindProductResponseApi = response.data;
-        handleSelectProductToModal(product);
+        const data: FindProductResponseApi = response.data
+        handleSelectProductToModal(product)
         setProductStock({
           localEstoque: data.localEstoque.map((item) => ({
             codLocal: item.CodLocal,
@@ -91,68 +80,68 @@ export const useProduct = () => {
             precoVenda: item.PrecoVenda,
             textoValorVenda: item.TextoValorVenda,
           })),
-        });
-        return setIsLoading(false);
+        })
+        return setIsLoading(false)
       }
-      setProductStock(null);
+      setProductStock(null)
     } catch (error) {
-      console.log({ error });
-      setIsLoading(false);
+      console.log({ error })
+      setIsLoading(false)
 
-      setProductStock(null);
+      setProductStock(null)
     }
-  };
+  }
 
   const totalProducts = () => {
     if (!products.length) {
-      return "Nenhum produto encontrado";
+      return 'Nenhum produto encontrado'
     } else if (products.length === 1) {
-      return "1 produto encontrado";
+      return '1 produto encontrado'
     } else {
-      return `${products.length} produtos encontrados`;
+      return `${products.length} produtos encontrados`
     }
-  };
+  }
 
   const handleCloseModalLocalStock = () => {
-    setShowModalLocalStock(false);
-    setProductStock(null);
-  };
+    setShowModalLocalStock(false)
+    setProductStock(null)
+  }
 
   const handleCloseModalImages = () => {
-    setShowModalImagese(false);
-  };
+    setShowModalImagese(false)
+  }
 
   const handleSelectProductFromDifferentLocal = (item: ProductStockItem) => {
     const selected = {
       ...(selectedProduct as CartProduct),
       estoque: item.estoque || 0,
-    };
-    if (!checkQuantity(selected)) return;
-    handleSelectProductFromModal(item);
-    setShowModalLocalStock(false);
-    setProductStock(null);
-  };
+    }
+    if (!checkQuantity(selected)) return
+    handleSelectProductFromModal(item)
+    setShowModalLocalStock(false)
+    setProductStock(null)
+  }
 
   const getProductImages = async (codProd: string) => {
     try {
-      setIsLoading(true);
-      setShowModalImagese(true);
-      const response = await productService.getProductImages(storeId, codProd);
-      console.log({ response });
+      setIsLoading(true)
+      setShowModalImagese(true)
+      const response = await productService.getProductImages(storeId, codProd)
+      console.log({ response })
 
       if (response.status === 200) {
-        const data: ProductImages[] = response.data;
-        setProductImages(data);
-        return setIsLoading(false);
+        const data: ProductImages[] = response.data
+        setProductImages(data)
+        return setIsLoading(false)
       }
-      setProductImages(null);
+      setProductImages(null)
     } catch (error) {
-      console.log({ error });
-      setIsLoading(false);
+      console.log({ error })
+      setIsLoading(false)
 
-      setProductImages(null);
+      setProductImages(null)
     }
-  };
+  }
 
   return {
     products,
@@ -168,5 +157,5 @@ export const useProduct = () => {
     handleSelectProductFromDifferentLocal,
     getProductImages,
     handleCloseModalImages,
-  };
-};
+  }
+}

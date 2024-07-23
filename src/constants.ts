@@ -1,3 +1,12 @@
-export const STORAGE_KEY_ACCESS_TOKEN = "@Aprincipal::AccessToken";
-export const STORAGE_KEY_USER = "@Aprincipal::User";
-export const COOKIE_KEY_ACCESS_TOKEN = "Aprincipal_AccessToken";
+export const STORAGE_KEY_ACCESS_TOKEN = '@Aprincipal::AccessToken'
+export const STORAGE_KEY_USER = '@Aprincipal::User'
+export const STORAGE_KEY_SALE_CURRENT_STEP = '@Aprincipal::SaleCurrentStep'
+export const STORAGE_KEY_CUSTOMER_SEARCH_TERM = '@Aprincipal::CustomerSearchTerm'
+export const STORAGE_KEY_SELECTED_CUSTOMER = '@Aprincipal::SelectedCustomer'
+export const STORAGE_KEY_SELECTED_SALE_TYPE = '@Aprincipal::SelectedSaleType'
+export const STORAGE_KEY_SELECTED_TAB_PRICE = '@Aprincipal::SelectedTabPrice'
+export const STORAGE_KEY_PRODUCT_SEARCH_TERM = '@Aprincipal::ProductSearchTerm'
+export const STORAGE_KEY_CART_ITEMS = '@Aprincipal::ShoppingCart'
+export const STORAGE_KEY_NEGOTIATION_INSTALLMENTS = '@Aprincipal::NegotiationInstallments'
+
+export const COOKIE_KEY_ACCESS_TOKEN = 'Aprincipal_AccessToken'

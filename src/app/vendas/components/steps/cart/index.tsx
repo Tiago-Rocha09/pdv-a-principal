@@ -25,9 +25,15 @@ const getItemInfo = (item: CartProduct) => {
 }
 
 export const Cart = () => {
-  const { handlePreviousStep, handleNextStep, handleGoToStep } = useSale()
-  const { cartItems, handleStartCartProductEditing, cartResume, confirmRemoveFromCart, handleGoToNegotiation } = useCart()
-  
+  const { handleGoToStep } = useSale()
+  const {
+    cartItems,
+    handleStartCartProductEditing,
+    cartResume,
+    confirmRemoveFromCart,
+    handleGoToNegotiation,
+  } = useCart()
+
   console.log({ cartResume })
 
   return (
@@ -71,7 +77,7 @@ export const Cart = () => {
           variant="outlined"
           className={styles.outlined}
           type="button"
-          onClick={handlePreviousStep}
+          onClick={() => handleGoToStep(0.5)}
           width="30%"
         />
         <CustomButton
@@ -79,7 +85,7 @@ export const Cart = () => {
           endIcon={<FaPlusCircle />}
           type="button"
           width="40%"
-          onClick={handleNextStep}
+          onClick={() => handleGoToStep(1.1)}
         />
         <CustomButton
           text="Avançar"

@@ -12,6 +12,10 @@ import { AddProduct } from './components/steps/addProduct'
 import { ToastContainer } from 'react-toastify'
 import { Negotiation } from './components/steps/negotiation'
 import { SaleDetails } from './components/steps/details'
+import { useLocalStorage } from '@/hooks/useLocalStorage'
+import { useEffect } from 'react'
+import { useInitialValue } from '@/hooks/useInitialValue'
+import { STORAGE_KEY_SALE_CURRENT_STEP } from '@/constants'
 
 const stepLabels = ['Dados', 'Itens', 'Negociação', 'Detalhes']
 
@@ -48,6 +52,7 @@ const getStepComponent = (activeStep: number) => {
 }
 
 export default function Sales() {
+  useInitialValue('vendas')
   const { activeStep } = useSale()
 
   return (

@@ -6,7 +6,8 @@
   ],
   "plugins": ["react"],
   "rules": {
-    "react/jsx-first-prop-new-line": [2, "multiline"]
+    "react/jsx-first-prop-new-line": [2, "multiline"],
+    "react/react-in-jsx-scope": "off"
   },
   "settings": {
     "react": {

@@ -6,6 +6,8 @@ import { useAlert } from './useAlert'
 import { UseFormSetValue } from 'react-hook-form'
 import { formatNumber } from '@/utils/mask'
 import { getCartResume } from '@/utils/functions'
+import { useLocalStorage } from './useLocalStorage'
+import { STORAGE_KEY_CART_ITEMS } from '@/constants'
 
 export type CarResumeProps = {
   itens: number
@@ -18,7 +20,9 @@ export type CarResumeProps = {
 }
 
 export const useCart = () => {
-  const { handleNextStep, configuration, selectedSaleType, handleGoToStep } = useSale()
+  const { setItem } = useLocalStorage()
+
+  const { configuration, selectedSaleType, handleGoToStep } = useSale()
   const { showAlert } = useAlert()
   const storeId = useStore((state) => state.login.user?.storeId) as number
 
@@ -51,7 +55,7 @@ export const useCart = () => {
     if (!checkQuantity(selected)) return
 
     setSelectedProduct(selected)
-    handleNextStep()
+    handleGoToStep(1.2)
   }
 
   //Chamado quando clica em "Detalhes" na pesquisa de produtos
@@ -165,6 +169,7 @@ export const useCart = () => {
     checkDesconto(newItem)
     const newCart = [...cartItems, newItem]
     setCartItems(newCart)
+    setItem(STORAGE_KEY_CART_ITEMS, JSON.stringify(newCart))
     handleGoToStep(1)
     setSelectedProduct(null)
   }
@@ -179,6 +184,7 @@ export const useCart = () => {
       return updatedItem
     })
     setCartItems(newCart)
+    setItem(STORAGE_KEY_CART_ITEMS, JSON.stringify(newCart))
     handleGoToStep(1)
     setSelectedProduct(null)
     setCartProductEditing(null)

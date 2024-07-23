@@ -3,7 +3,7 @@ import { useStore } from '@/store'
 import { Customer } from '@/types/customer'
 import { SaleConfigurationResponse, SaleInstallment, SaleTypeResponse, SavePurchase } from '@/types/sales'
 import { OptionSelect, OptionSelectApi } from '@/types/select'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useAlert } from './useAlert'
 import { NegotiationSchema } from '@/app/vendas/components/steps/negotiation/negotiation.schema'
 import { UseFormReset } from 'react-hook-form'
@@ -12,6 +12,14 @@ import { formatNumber } from '@/utils/mask'
 import { DetailsSchema } from '@/app/vendas/components/steps/details/details.schema'
 import { useRouter } from 'next/navigation'
 import { getCartResume } from '@/utils/functions'
+import { useLocalStorage } from './useLocalStorage'
+import {
+  STORAGE_KEY_NEGOTIATION_INSTALLMENTS,
+  STORAGE_KEY_SALE_CURRENT_STEP,
+  STORAGE_KEY_SELECTED_CUSTOMER,
+  STORAGE_KEY_SELECTED_SALE_TYPE,
+  STORAGE_KEY_SELECTED_TAB_PRICE,
+} from '@/constants'
 
 const steps = [
   0, //Buscar/selecionar cliente
@@ -31,6 +39,7 @@ type SalesTypeOptionSelect = {
 export const useSale = () => {
   const router = useRouter()
 
+  const { setItem } = useLocalStorage()
   const { showAlert } = useAlert()
   // const { cartResume, cartItems } = useCart()
   const storeId = useStore((state) => state.login.user?.storeId) as number
@@ -67,7 +76,8 @@ export const useSale = () => {
 
   const handleSelectCustomer = (selectedCustomer: Customer) => {
     setSelectedCustomer(selectedCustomer)
-    handleNextStep()
+    setItem(STORAGE_KEY_SELECTED_CUSTOMER, JSON.stringify(selectedCustomer))
+    handleGoToStep(0.5)
   }
 
   const handleSelectSaleType = (selectedSaleType: number) => {
@@ -75,7 +85,10 @@ export const useSale = () => {
     const tabPrice = saleTypes.find((item) => item.value === selectedSaleType)?.tabPrice || null
 
     setSelectedTabPrice(tabPrice)
-    handleNextStep()
+
+    setItem(STORAGE_KEY_SELECTED_SALE_TYPE, selectedSaleType.toString())
+    setItem(STORAGE_KEY_SELECTED_TAB_PRICE, tabPrice?.toString() || '')
+    handleGoToStep(1)
   }
 
   const listSaleTypes = useCallback(async () => {
@@ -159,18 +172,6 @@ export const useSale = () => {
     }
   }, [storeId])
 
-  const handleNextStep = () => {
-    const currentStepIndex = steps.findIndex((item) => item === activeStep)
-    setActiveStep(steps[currentStepIndex + 1])
-  }
-
-  const handlePreviousStep = () => {
-    const currentStepIndex = steps.findIndex((item) => item === activeStep)
-    if (currentStepIndex > 0) {
-      setActiveStep(steps[currentStepIndex - 1])
-    }
-  }
-
   const handleGoToStep = (step: number) => {
     if (steps.indexOf(step) < 0) {
       return showAlert({
@@ -178,6 +179,7 @@ export const useSale = () => {
         text: 'Não conseguimos identificar qual etapa você deve acessar',
       })
     }
+    setItem(STORAGE_KEY_SALE_CURRENT_STEP, step.toString())
     setActiveStep(step)
   }
 
@@ -223,7 +225,7 @@ export const useSale = () => {
       }
     }
     setInstallments(newInstallments)
-    console.log({ newInstallments })
+    setItem(STORAGE_KEY_NEGOTIATION_INSTALLMENTS, JSON.stringify(newInstallments))
     nextDueDate = nextDueDate.add(30, 'days')
     reset({
       date: nextDueDate,
@@ -304,6 +306,7 @@ export const useSale = () => {
       }
       return item
     })
+    setItem(STORAGE_KEY_NEGOTIATION_INSTALLMENTS, JSON.stringify(newInstallments))
     setInstallments(newInstallments)
     const lastInstallment = newInstallments[newInstallments.length - 1]
     reset({
@@ -349,7 +352,8 @@ export const useSale = () => {
       tabPreco: selectedTabPrice as number,
       localEstoque: storeId,
     }
-
+    console.log({ body })
+    return
     try {
       setIsLoading(true)
       const response = await salesService.saveSale(body)
@@ -396,9 +400,7 @@ export const useSale = () => {
     deliveryStatus,
     listSaleTypes,
     handleSelectCustomer,
-    handlePreviousStep,
     handleSelectSaleType,
-    handleNextStep,
     getConfiguration,
     handleGoToStep,
     listPaymentMethods,

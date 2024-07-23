@@ -56,7 +56,7 @@ const getItemInfo = (item: CartProduct) => {
 }
 
 export const AddProduct = () => {
-  const { handlePreviousStep } = useSale()
+  const { handleGoToStep } = useSale()
   const {
     handleAddItem,
     handleUpdateItem,
@@ -160,7 +160,7 @@ export const AddProduct = () => {
             variant="outlined"
             className={styles.outlined}
             type="button"
-            onClick={isEditing ? handlePreviousStepFromEditing : handlePreviousStep}
+            onClick={isEditing ? handlePreviousStepFromEditing : () => handleGoToStep(1.1)}
             width="40%"
           />
           <CustomButton
